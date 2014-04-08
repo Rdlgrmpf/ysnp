@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<title>
+			XPass Login
+		</title>
+		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12040/static/css/login.css">
+		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12040/static/css/main.css">
+	</head>
+	<body>
+	<!-- logo blau: r46 g49 b146 -->
+	<div class="centered">
+			
+		<img id="login_logo" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/images/xpass_logo.png">
+		{% if error %}
+			<div style="border: 1px solid red;margin-top:10px;">
+				Not a valid password or username.
+			</div>
+		{% endif %}
+		<form action="" method="post" accept-charset="utf-8">
+			<br><br>
+			<input name="username" type="text" placeholder="Username" class="input textinput">
+			<br><br>
+			<input name="password" type="password" placeholder="Password" class="input textinput">
+			<br><br>
+		    {% csrf_token %}
+		    <input type="hidden" name="next" value="{{ next }}" />
+		    <input type="submit" name="submit" value="Log In" class="input login">
+		</form>
+	</div>
+</body>
+</html>

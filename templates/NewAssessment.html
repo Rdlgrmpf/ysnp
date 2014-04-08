@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post" action="">
+	Name:<br />
+	<input name="assessment_name" type="string" >
+	
+	{% for assessor in assessors %}
+	<br><br>
+	Assessor:<br>
+	<select>
+
+		<option>{{assessor.username}}</option>
+
+	</select>
+	{% endfor %}
+	
+</form>
+{% endblock %}
