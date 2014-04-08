@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
+from ysnp.models import Course
 
 
 
@@ -44,9 +45,14 @@ def user_login(request):
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
            return render(request, 'login.html', {'next': '/main/'})
+       
 @login_required
 def home(request):
     return render(request, 'base.html')
 
 def logout_view(request):
     logout(request)
+    
+def courses_view(request):
+    courses = Course.objects.filter(lecturer=1)
+    return render(request, 'coursesList.html', {'courses':courses})
