@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <table class="liste">
-	<tr>
+	<tr class="liste-header">
 		<th>
 			ID
 		</th>
@@ -10,7 +10,7 @@
 		</th>
 	</tr>
 	{% for course in courses %}
-	<tr>
+	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
 		<td>
 			{{course.courseId}}
 		</td>
