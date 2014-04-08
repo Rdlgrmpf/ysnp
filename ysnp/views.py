@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
-from ysnp.models import Course
+from ysnp.models import Course,Student
 
 
 
@@ -53,6 +53,17 @@ def home(request):
 def logout_view(request):
     logout(request)
     
+@login_required
 def courses_view(request):
     courses = Course.objects.filter(lecturer=1)
     return render(request, 'coursesList.html', {'courses':courses})
+
+@login_required
+def course_view(request, id):
+    if id:
+        students = Student.objects.filter(student_course__course=id)
+        return render(request, 'studentList.html', {'students':students})
+        
+        
+        
+        

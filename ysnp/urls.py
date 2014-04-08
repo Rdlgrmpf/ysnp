@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', 'ysnp.views.user_login',  name='user_login'),
     url(r'^logout/', 'ysnp.views.user_login'),
-    url(r'^courses/', 'ysnp.views.courses_view'),
+    url(r'^courses/$', 'ysnp.views.courses_view'),
+    url(r'^course/(?P<id>\d+)/','ysnp.views.course_view')
 )
