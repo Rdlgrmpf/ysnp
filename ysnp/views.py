@@ -9,9 +9,6 @@ from ysnp.models import Course,Student
 
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'base.html'
-
-def logout_view(request):
-    logout(request)
     
 class ListCourseView(LoginRequiredMixin, ListView):
 
