@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app.models import *
+from ysnp.models import *
 
 admin.site.register(Student)
 admin.site.register(Employee)
