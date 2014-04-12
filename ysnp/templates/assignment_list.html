@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}XPass - Courses{% endblock %}
+{% block title %}XPass - Assignments{% endblock %}
 {% block content %}
-<h1>Courses</h1>
+<h1>Assignments</h1>
 <table class="liste">
 	<tr class="liste-header">
 		<th>
@@ -11,25 +11,25 @@
 			Name
 		</th>
         <th>
-			Lecturer
+			Tolerance
 		</th>
         <th>
-			Number of Students
+			Assessment
 		</th>
 	</tr>
-	{% for course in courses %}
+	{% for assignment in assignments %}
 	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
 		<td>
-			{{course.courseId}}
+			{{assignment.assignmentId}}
+		</td>
+        <td>
+			{{assignment.name}}
+		</td>
+        <td>
+			{{assignment.tolerance}}
 		</td>
 		<td>
-            <a href="{% url 'course-detail' course.courseId %}">{{course.name}}</a>
-		</td>
-        <td>
-			{{course.lecturer.user.first_name}} {{ course.lecturer.user.last_name }}
-		</td>
-        <td>
-			{{course.attendees}}
+            <a href="{% url 'assessment-detail' assignment.assessment.assessmentId %}">{{assignment.assessment.name}}</a>
 		</td>
 	</tr>
 	{%  endfor %}

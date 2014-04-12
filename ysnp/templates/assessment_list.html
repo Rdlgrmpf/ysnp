@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}XPass - Assessments{% endblock %}
+{% block content %}
+<h1>Assessments</h1>
+<table class="liste">
+	<tr class="liste-header">
+		<th>
+			ID
+		</th>
+		<th>
+			Name
+		</th>
+        <th>
+			Course
+		</th>
+        <th>
+			Assessor
+		</th>
+	</tr>
+	{% for assessment in assessments %}
+	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+		<td>
+			{{assessment.assessmentId}}
+		</td>
+		<td>
+            <a href="{% url 'assessment-detail' assessment.assessmentId %}">{{assessment.name}}</a>
+		</td>
+        <td>
+			<a href="{% url 'course-detail' assessment.course.courseId %}">{{assessment.course.name}}</a>
+		</td>
+        <td>
+			{{assessment.assessor.user.first_name}} {{assessment.assessor.user.last_name}}
+		</td>
+	</tr>
+	{%  endfor %}
+</table>
+{% endblock %}

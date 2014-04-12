@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/main.css">
 <link href='http://fonts.googleapis.com/css?family=Roboto:100,300' rel='stylesheet' type='text/css'>
 <div id="headerdiv">
-	<img src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/images/xpass_logo.png"/ id="header_logo">
+    <a href="{% url 'home' %}"><img style="border:0;" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/images/xpass_logo.png"alt="Home" id="header_logo"></a>
 	<ul class="uberlist">
 		<li class="main">
 			<a href="{% url 'course-list' %}">Courses</a>
@@ -10,39 +10,32 @@
 				<li class="unterpunkt">
 					<a href="{% url 'course-list' %}">List</a>
 				</li>
+			</ul>
+		</li>
+		<li class="main">
+			<a href="{% url 'assessment-list' %}">Assessments</a>
+			<ul>
 				<li class="unterpunkt">
-					<a href="">New</a>
+					<a href="{% url 'assessment-list' %}">List</a>
 				</li>
 			</ul>
 		</li>
 		<li class="main">
-			<a href="">Fall</a>
+			<a href="{% url 'assignment-list' %}">Assignments</a>
 			<ul>
 				<li class="unterpunkt">
-					<a href="">UP1</a>
-				</li>
-			</ul>
-		</li>
-		<li class="main">
-			<a href="">Mann</a>
-			<ul>
-				<li class="unterpunkt">
-					<a href="">UP1</a>
-				</li>
-				<li class="unterpunkt">
-					<a href="">UP2</a>
-				</li>
-				<li class="unterpunkt">
-					<a href="">UP3</a>
+					<a href="{% url 'assignment-list' %}">List</a>
 				</li>
 			</ul>
 		</li>
         <li class="main">
 			<a href="">Account</a>
 			<ul>
+                {% if user.is_superuser %}
 				<li class="unterpunkt">
-					<a href="">Settings</a>
+					<a href="{% url 'admin:index' %}">Admin</a>
 				</li>
+                {% endif %}
 				<li class="unterpunkt">
 					<a href="{% url 'user-logout' %}">Logout</a>
 				</li>

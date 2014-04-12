@@ -2,31 +2,69 @@
 {% block title %}XPass - {{ course.name }}{% endblock %}
 {% block content %}
 <h1>{{ course.name }}</h1>
-<table class="liste">
-	<tr class="liste-header">
-		<th>
-			MatrikelNr.
-		</th>
-		<th>
-			Name
-		</th>
-        <th>
-            Semester
-        </th>
-	</tr>
-	{% for student in students %}
-	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
-		<td>
-			{{ student.matrikelNr }}
-		</td>
-		<td>
-			{{ student.user.first_name }} {{ student.user.last_name }}
-		</td>
-        <td>
-			{{ student.semester }}
-		</td>
-	</tr>
-	{%  endfor %}
-    <a href="{% url 'course-list' %}">back to list</a>
-</table>
+<h2> Students </h2>  
+    {% if students %}
+        <table class="liste">
+
+            <tr class="liste-header">
+                <th>
+                    MatrikelNr.
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Semester
+                </th>
+            </tr>
+            {% for student in students %}
+            <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+                <td>
+                    {{ student.matrikelNr }}
+                </td>
+                <td>
+                    {{ student.user.first_name }} {{ student.user.last_name }}
+                </td>
+                <td>
+                    {{ student.semester }}
+                </td>
+            </tr>
+            {%  endfor %}
+        </table>
+    {% else %}
+        No students.
+    {% endif %}
+<h2> Assessments </h2>    
+    {% if assessments %}
+        <table class="liste">
+        <tr class="liste-header">
+            <th>
+                AssessmentID
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Assessor
+            </th>
+        </tr>
+            {% for assessment in assessments %}
+            <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+                <td>
+                    {{ assessment.assessmentId }}
+                </td>
+                <td>
+                    <a href="{% url 'assessment-detail' assessment.assessmentId %}">{{ assessment.name }}</a>
+                </td>
+                <td>
+                    {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }}
+                </td>
+            </tr>
+            {%  endfor %}
+        </table>
+    {% else %}
+    No assessments
+    {% endif %}
+<br>
+<a href="{% url 'course-list' %}">All courses</a>
 {% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}XPass - {{ assessment.name }}{% endblock %}
+{% block content %}
+<h1>{{ assessment.name }}</h1>
+<p>
+    <b>Assessor:</b> {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }} <br>
+    <b>Course:</b> <a href="{% url 'course-detail' assessment.course.courseId %}">{{ assessment.course.name }}</a>
+</p>
+<h2> Assignments </h2>
+    {% if assignments %}
+        <table class="liste">
+            <tr class="liste-header">
+                <th>
+                    AssignmentID
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Tolerance
+                </th>
+            </tr>
+            {% for assignment in assignments %}
+            <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+                <td>
+                    {{ assignment.assignmentId }}
+                </td>
+                <td>
+                    <a href="{% url 'assignment-detail' assignment.assignmentId %}">{{assignment.name}}</a>
+                </td>
+                <td>
+                    {{ assignment.tolerance }}
+                </td>
+            </tr>
+            {%  endfor %}
+        </table>
+    {% else %}
+        No assignments.
+    {% endif %}
+<br>
+<a href="{% url 'assessment-list' %}">All assessments</a>
+{% endblock %}

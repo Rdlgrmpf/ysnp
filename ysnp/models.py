@@ -47,7 +47,7 @@ class Assessment(models.Model):
 	assessor = models.ForeignKey(Employee)
 
 	def __unicode__(self):
-		return str(self.assessmentId) + ' ' + self.name + ' in ' + self.course +  ' graded by ' + self.assessor
+		return str(self.assessmentId) + ' ' + self.name + ' in ' + str(self.course.name) +  ' graded by ' + self.assessor.user.first_name + ' ' + self.assessor.user.last_name
 
 	class Meta:
 		db_table = 'Assessment'
@@ -59,7 +59,7 @@ class Assignment(models.Model):
 	assessment = models.ForeignKey(Assessment)
 
 	def __unicode__(self):
-		return str(self.assignmentId) + ' ' + self.name + ' part of ' + self.assessment
+		return str(self.assignmentId) + ' ' + self.name + ' part of ' + str(self.assessment.name)
 
 	class Meta:
 		db_table = 'Assignment'
