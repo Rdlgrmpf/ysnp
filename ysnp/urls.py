@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.auth.views import login, logout, password_reset, password_reset_done, password_reset_confirm, password_reset_complete
+from django.contrib.auth.views import login, logout
 
 from .views import Home, CourseListView, CourseDetailView, AssessmentListView, AssessmentDetailView, AssignmentListView, AssignmentDetailView, ProfileView
 
@@ -19,8 +19,5 @@ urlpatterns = patterns('',
     url(r'^assignments/$', AssignmentListView.as_view(), name='assignment-list'),
     url(r'^assignments/(?P<pk>[0-9]+)/$',AssignmentDetailView.as_view(), name='assignment-detail'),
     url(r'profile/$', ProfileView.as_view(), name='user-profile'),
-    url(r'^profile/password/reset/$', password_reset, {'post_reset_redirect' : '/profile/password/reset/done/'}, name="password-reset"),
-    url(r'^profile/password/reset/done/$',password_reset_done),
-    url(r'^profile/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',password_reset_confirm,{'post_reset_redirect' : '/profile/password/done/'}),
-    url(r'^profile/password/done/$',password_reset_complete),
+    url(r'profile/password/',include('password_reset.urls')),
 )
