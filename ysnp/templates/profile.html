@@ -8,6 +8,6 @@
 <b>Last login:</b> {{ user.last_login }}<br>
 <b>Date joined:</b> {{ user.date_joined }}<br>
 
-<a href="{% url 'admin:password_change' %}">Change password</a>
+<a href="{% url 'user-change-password' %}">Change password</a>
 
 {% endblock %}

@@ -72,4 +72,7 @@ class AssignmentDetailView(LoginRequiredMixin, DetailView):
 class ProfileView(LoginRequiredMixin, TemplateView):
     model = User
     template_name = 'profile.html'
+
+class PasswordSuccessView(LoginRequiredMixin, TemplateView):
+    template_name = 'passwordChangeSuccess.html'
      
