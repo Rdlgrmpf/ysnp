@@ -65,12 +65,12 @@ class Assignment(models.Model):
 		db_table = 'Assignment'
 
 class Student_Course(models.Model):
-	matrikelNr = models.ForeignKey(Student)
+	student = models.ForeignKey(Student)
 	course = models.ForeignKey(Course)
 	semester = models.IntegerField()
 
 	def __unicode__(self):
-		return str(self.matrikelNr) + ' ' + str(self.course) + ' ' + str(self.semester)
+		return str(self.student) + ' ' + str(self.course) + ' ' + str(self.semester)
 
 	class Meta:
 		db_table = 'Student_Course'

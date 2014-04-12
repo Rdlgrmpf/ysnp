@@ -30,7 +30,7 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         context['students'] = Student.objects.filter(student_course__course__courseId=self.kwargs.get('pk'))
         for student in context['students']:
-            student.semester = Student_Course.objects.get(course=self.object, matrikelNr=student).semester
+            student.semester = Student_Course.objects.get(course=self.object, student=student).semester
             
         context['assessments'] = Assessment.objects.filter(course=self.object)
         return context
