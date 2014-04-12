@@ -92,3 +92,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.web.de'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'xpass_ysnp@web.de'
+ 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+try:
+  from local_settings import *
+except ImportError:
+  pass

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}XPass - {{ user.first_name }} {{ user.last_name }}{% endblock %}
+{% block content %}
+<h1>Your Profile</h1>
+<b>First Name:</b> {{ user.first_name }}<br>
+<b>Last Name:</b> {{ user.last_name }}<br>
+<b>Email:</b> {{ user.email }}<br>
+<b>Last login:</b> {{ user.last_login }}<br>
+<b>Date joined:</b> {{ user.date_joined }}<br>
+
+<a href="{% url 'admin:password_change' %}">Change password</a>
+
+{% endblock %}

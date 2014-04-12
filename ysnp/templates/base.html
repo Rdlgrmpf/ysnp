@@ -8,11 +8,15 @@
 	</head>
 	<body>
 		{% include 'header.html' %}
-		<!-- footer inclusion starts here -->
-		{% include 'footer.html' %}
-		<!-- footer inclusion ends here -->
 		{% block content %}
         <h1>Welcome {{ user.first_name }} {{ user.last_name }}</h1><br>
         {% endblock %}
+        <div id="footerdiv">
+            <div>
+                {% block footer %}
+                Last login: {{ user.last_login }}
+                {% endblock %}
+            </div>
+        </div>        
 	</body>
 </html>
