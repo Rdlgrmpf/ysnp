@@ -1,13 +1,20 @@
 ysnp
 ====
+install virtualenv:
+
+    sudo aptitude install python-virtualenv
     sudo pip install virtualenvwrapper
     git clone git@github.com:Rdlgrmpf/ysnp.git
+
+modify bashrc:
 
     # add this to bashrc
     source /usr/local/bin/virtualenvwrapper.sh
     export WORKON_HOME=~/.virtualenvs
 
-    mkvirtualenv siam
+have fun:
+
+    mkvirtualenv ysnp
     pip install -r requirements.txt
 
 (C) Robin Morawetz, Janosch Frank, Franz Flintzer
