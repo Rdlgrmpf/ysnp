@@ -1,5 +1,9 @@
 from django.contrib import admin
 from ysnp.models import *
+from django.contrib.auth.models import Permission
+
+
+admin.site.register(Permission)
 
 admin.site.register(Student)
 admin.site.register(Employee)
