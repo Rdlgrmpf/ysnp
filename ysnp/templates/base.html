@@ -4,9 +4,13 @@
 			{% block title %} XPass {% endblock %}
 		</title>
 		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/main.css">
+		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/footer.css">
 	</head>
 	<body>
 		{% include 'header.html' %}
+		<!-- footer inclusion starts here -->
+		{% include 'footer.html' %}
+		<!-- footer inclusion ends here -->
 		{% block content %}
         <h1>Welcome {{ user.first_name }} {{ user.last_name }}</h1><br>
         {% endblock %}
