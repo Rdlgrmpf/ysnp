@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Courses</h1>
+<table class="liste">
+	<tr class="liste-header">
+		<th>
+			ID
+		</th>
+		<th>
+			Name
+		</th>
+        <th>
+			Lecturer
+		</th>
+        <th>
+			Number of Students
+		</th>
+	</tr>
+	{% for course in courses %}
+	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+		<td>
+			{{course.courseId}}
+		</td>
+		<td>
+            <a href="{% url 'course-detail' course.courseId %}">{{course.name}}</a>
+		</td>
+        <td>
+			{{course.lecturer.user.first_name}} {{ course.lecturer.user.last_name }}
+		</td>
+        <td>
+			{{course.attendees}}
+		</td>
+	</tr>
+	{%  endfor %}
+</table>
+{% endblock %}
