@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
-
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
 from django.views.generic import DetailView, ListView, TemplateView
@@ -24,7 +24,7 @@ class CourseListView(LoginRequiredMixin, ListView):
 class CourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
     template_name = 'course_detail.html'
-    context_object_name = 'course'            
+    context_object_name = 'course'
     
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
@@ -44,7 +44,7 @@ class AssessmentListView(LoginRequiredMixin, ListView):
 class AssessmentDetailView(LoginRequiredMixin, DetailView):
     model = Assessment
     template_name = 'assessment_detail.html'
-    context_object_name = 'assessment'            
+    context_object_name = 'assessment'
     
     def get_context_data(self, **kwargs):
         context = super(AssessmentDetailView, self).get_context_data(**kwargs)
@@ -63,8 +63,13 @@ class AssignmentListView(LoginRequiredMixin, ListView):
 class AssignmentDetailView(LoginRequiredMixin, DetailView):
     model = Assignment
     template_name = 'assignment_detail.html'
-    context_object_name = 'assignment'            
+    context_object_name = 'assignment'
     
     def get_context_data(self, **kwargs):
         context = super(AssignmentDetailView, self).get_context_data(**kwargs)
-        return context             
+        return context  
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    model = User
+    template_name = 'profile.html'
+     

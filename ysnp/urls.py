@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.views import login, logout
 
-from .views import Home, CourseListView, CourseDetailView, AssessmentListView, AssessmentDetailView, AssignmentListView, AssignmentDetailView
+from .views import Home, CourseListView, CourseDetailView, AssessmentListView, AssessmentDetailView, AssignmentListView, AssignmentDetailView, ProfileView
 
 admin.autodiscover()
 
@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^assessments/(?P<pk>[0-9]+)/$',AssessmentDetailView.as_view(), name='assessment-detail'),
     url(r'^assignments/$', AssignmentListView.as_view(), name='assignment-list'),
     url(r'^assignments/(?P<pk>[0-9]+)/$',AssignmentDetailView.as_view(), name='assignment-detail'),
+    url(r'profile/$', ProfileView.as_view(), name='user-profile'),
 )

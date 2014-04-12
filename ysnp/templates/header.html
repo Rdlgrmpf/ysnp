@@ -29,8 +29,11 @@
 			</ul>
 		</li>
         <li class="main">
-			<a href="">Account</a>
+			<a href="{% url 'user-profile' %}">Account</a>
 			<ul>
+                <li class="unterpunkt">
+					<a href="{% url 'user-profile' %}">Profile</a>
+				</li>
                 {% if user.is_superuser %}
 				<li class="unterpunkt">
 					<a href="{% url 'admin:index' %}">Admin</a>
