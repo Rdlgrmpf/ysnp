@@ -3,15 +3,22 @@
 		<title>
 			XPass Login
 		</title>
-		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12040/static/css/login.css">
-		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12040/static/css/main.css">
+		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/login.css">
+		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/main.css">
+		<link href='http://fonts.googleapis.com/css?family=Roboto:100,300' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
 	<!-- logo blau: r46 g49 b146 -->
-	<div class="centered">
-			
+	<div class="centered">	
 		<img id="login_logo" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/images/xpass_logo.png">
-		Thank you for visiting!<br>
-        <a href="{% url 'user-login' %}">Log back in</a>
+		<br><br>
+		<p>
+			Thank you for visiting.
+			<br>
+        	<a class="standardlink" href="{% url 'user-login' %}">
+        		Log In
+        	</a>
+        </p>
+    </div>
 </body>
 </html>

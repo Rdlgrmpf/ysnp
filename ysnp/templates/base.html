@@ -8,9 +8,14 @@
 	</head>
 	<body>
 		{% include 'header.html' %}
-		{% block content %}
-        <h1>Welcome {{ user.first_name }} {{ user.last_name }}</h1><br>
-        {% endblock %}
+		<div id="contentdiv">
+			{% block content %}
+	        	<h1>
+	        		Welcome {{ user.first_name }} {{ user.last_name }}
+	        	</h1>
+	        	<br>
+	        {% endblock %}
+        </div>
         <div id="footerdiv">
             <div>
                 {% block footer %}
