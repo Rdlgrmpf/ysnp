@@ -2,7 +2,9 @@
 <link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/main.css">
 <link href='http://fonts.googleapis.com/css?family=Roboto:100,300' rel='stylesheet' type='text/css'>
 <div id="headerdiv">
-    <a href="{% url 'home' %}" id="header_logo"></a>
+    <a href="{% url 'home' %}">
+    	<img id="header_logo" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/images/xpass_logo_gross.png">
+    </a>
     {% if user.is_authenticated %}
 	<ul class="uberlist">
 		<li class="main">
