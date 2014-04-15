@@ -1,71 +1,79 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Student(models.Model):
-	matrikelNr = models.AutoField(primary_key = True)
+class OccupationManager(models.Manager):
+	def get_students(self):
+		return super(OccupationManager, self).get_queryset().filter(user__groups__name__contains='Student')
+
+	def get_assessors(self):
+		return super(OccupationManager, self).get_queryset().filter(user__groups__name__contains='Assessor')
+
+	def get_lecturers(self):
+		return super(OccupationManager, self).get_queryset().filter(user__groups__name__contains='Lecturer')
+
+class Profile(models.Model):
+	profile_id = models.AutoField(primary_key = True)
+	matrikel_nr = models.IntegerField(null = True, blank = True)
+	employee_id = models.IntegerField(null = True, blank = True)
 	user = models.OneToOneField(User)
 	birthday = models.DateField()
 	gender = models.TextField()
-	street = models.TextField()
-	postalCode = models.IntegerField()
+
+	objects = models.Manager()
+	occupation = OccupationManager()
+
+	def is_student(self):
+		return self.user.groups.filter(name='Student')
+
+	def is_assessor(self):
+		return self.user.groups.filter(name='Assessor')
+
+	def is_lecturer(self):
+		return self.user.groups.filter(name='Lecturer')
 
 	def __unicode__(self):
-		return str(self.matrikelNr) + ' ' + self.user.first_name + ' ' + self.user.last_name
+		return str(self.profile_id) + ' ' + self.user.first_name + ' ' + self.user.last_name
 
 	class Meta:
-		db_table = 'Student'
-
-class Employee(models.Model):
-	employeeId = models.AutoField(primary_key = True)
-	user = models.OneToOneField(User)
-	birthday = models.DateField()
-	street = models.TextField()
-	postalCode = models.IntegerField()
-	jobFunction = models.IntegerField()
-
-	def __unicode__(self):
-		return str(self.employeeId) + ' ' + self.user.first_name + ' ' + self.user.last_name
-
-	class Meta:
-		db_table = 'Employee'
+		db_table = 'Profile'
 
 class Course(models.Model):
-	courseId = models.AutoField(primary_key = True)
+	course_id = models.AutoField(primary_key = True)
 	name = models.TextField()
-	lecturer = models.ForeignKey(Employee)
+	lecturer = models.ForeignKey(Profile)
 
 	def __unicode__(self):
-		return str(self.courseId) + ' ' + self.name + ' by ' + self.lecturer.user.first_name + ' ' + self.lecturer.user.last_name
+		return str(self.course_id) + ' ' + self.name + ' by ' + self.lecturer.user.first_name + ' ' + self.lecturer.user.last_name
 
 	class Meta:
 		db_table = 'Course'
 
 class Assessment(models.Model):
-	assessmentId = models.AutoField(primary_key = True)
+	assessment_id = models.AutoField(primary_key = True)
 	name = models.TextField()
 	course = models.ForeignKey(Course)
-	assessor = models.ForeignKey(Employee)
+	assessor = models.ForeignKey(Profile)
 
 	def __unicode__(self):
-		return str(self.assessmentId) + ' ' + self.name + ' in ' + str(self.course.name) +  ' graded by ' + self.assessor.user.first_name + ' ' + self.assessor.user.last_name
+		return str(self.assessment_id) + ' ' + self.name + ' in ' + str(self.course.name) +  ' graded by ' + self.assessor.user.first_name + ' ' + self.assessor.user.last_name
 
 	class Meta:
 		db_table = 'Assessment'
 
 class Assignment(models.Model):
-	assignmentId = models.AutoField(primary_key = True)
+	assignment_id = models.AutoField(primary_key = True)
 	name = models.TextField()
 	tolerance = models.FloatField()
 	assessment = models.ForeignKey(Assessment)
 
 	def __unicode__(self):
-		return str(self.assignmentId) + ' ' + self.name + ' part of ' + str(self.assessment.name)
+		return str(self.assignment_id) + ' ' + self.name + ' part of ' + str(self.assessment.name)
 
 	class Meta:
 		db_table = 'Assignment'
 
 class Student_Course(models.Model):
-	student = models.ForeignKey(Student)
+	student = models.ForeignKey(Profile)
 	course = models.ForeignKey(Course)
 	semester = models.IntegerField()
 
@@ -76,35 +84,35 @@ class Student_Course(models.Model):
 		db_table = 'Student_Course'
 
 class Criterion(models.Model):
-	criterionId = models.AutoField(primary_key = True)
+	criterion_id = models.AutoField(primary_key = True)
 	name = models.TextField()
 	assignment = models.ForeignKey(Assignment)
 
 	def __unicode__(self):
-		return str(self.criterionId) + ' ' + self.name
+		return str(self.criterion_id) + ' ' + self.name
 
 	class Meta:
 		db_table = 'Criterion'
 
 class ScoreLevel(models.Model):
-	scoreLevelId = models.AutoField(primary_key = True)
+	score_level_id = models.AutoField(primary_key = True)
 	level = models.IntegerField()
 	assignment = models.ForeignKey(Assignment)
 
 	def __unicode__(self):
-		return str(self.scoreLevelId) + ' ' + self.level
+		return str(self.score_level_id) + ' ' + self.level
 
 	class Meta:
 		db_table = 'ScoreLevel'
 
 class Criterion_Score(models.Model):
 	criterion = models.ForeignKey(Criterion)
-	scoreLevel = models.ForeignKey(ScoreLevel)
-	student = models.ForeignKey(Student)
+	score_level = models.ForeignKey(ScoreLevel)
+	student = models.ForeignKey(Profile)
 	number = models.IntegerField()
 
 	def __unicode__(self):
-		return str(self.criterion) + ' ' + str(scoreLevel) + ' ' + str(number)
+		return str(self.criterion) + ' ' + str(score_level) + ' ' + str(number)
 
 	class Meta:
 		db_table = 'Criterion_Score'

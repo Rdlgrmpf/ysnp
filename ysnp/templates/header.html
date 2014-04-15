@@ -7,6 +7,7 @@
     </a>
     {% if user.is_authenticated %}
 	<ul class="uberlist">
+		{% if user.profile.is_lecturer or user.profile.is_student %}
 		<li class="main">
 			<a href="{% url 'course-list' %}">Courses</a>
 			<ul>
@@ -15,6 +16,7 @@
 				</li>
 			</ul>
 		</li>
+		{% endif %}
 		<li class="main">
 			<a href="{% url 'assessment-list' %}">Assessments</a>
 			<ul>

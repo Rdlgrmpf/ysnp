@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
 from django.views.generic import DetailView, ListView, TemplateView
 from braces.views import LoginRequiredMixin
-from ysnp.models import Assessment, Assignment, Course, Student, Student_Course
+from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course
 
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'base.html'
@@ -18,7 +18,7 @@ class CourseListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         for course in self.object_list:
-            course.attendees = Student.objects.filter(student_course__course=course).count()
+            course.attendees = profile.occupation.get_students().filter(student_course__course=course).count()
         return context
 
 class CourseDetailView(LoginRequiredMixin, DetailView):
@@ -28,7 +28,7 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
-        context['students'] = Student.objects.filter(student_course__course__courseId=self.kwargs.get('pk'))
+        context['students'] = profile.occupation.get_students().filter(student_course__course__course_id=self.kwargs.get('pk'))
         for student in context['students']:
             student.semester = Student_Course.objects.get(course=self.object, student=student).semester
             

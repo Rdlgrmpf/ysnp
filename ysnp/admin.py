@@ -5,8 +5,7 @@ from django.contrib.auth.models import Permission
 
 admin.site.register(Permission)
 
-admin.site.register(Student)
-admin.site.register(Employee)
+admin.site.register(Profile)
 admin.site.register(Course)
 admin.site.register(Student_Course)
 admin.site.register(Criterion)
