@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
 from django.views.generic import DetailView, ListView, TemplateView
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course
 
 class Home(LoginRequiredMixin, TemplateView):
@@ -18,17 +18,26 @@ class CourseListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(CourseListView, self).get_context_data(**kwargs)
         for course in self.object_list:
-            course.attendees = profile.occupation.get_students().filter(student_course__course=course).count()
+            course.attendees = Profile.occupation.get_students().filter(student_course__course=course).count()
         return context
 
 class CourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
     template_name = 'course_detail.html'
     context_object_name = 'course'
+
+    def test_func(self, user):
+    	if user.profile.is_lecturer():
+    		return self.object.lecturer == user.profile
+    	elif user.profile.is_student():
+    		return Student_Course.objects.filter(course=self.object, student=user.profile).exists()
+    	else:
+    		return False
     
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
-        context['students'] = profile.occupation.get_students().filter(student_course__course__course_id=self.kwargs.get('pk'))
+        context['allowed'] = self.test_func(self.request.user)
+        context['students'] = Profile.occupation.get_students().filter(student_course__course__course_id=self.kwargs.get('pk'))
         for student in context['students']:
             student.semester = Student_Course.objects.get(course=self.object, student=student).semester
             

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block title %}XPass - {{ course.name }}{% endblock %}
 {% block content %}
+
+{% if allowed %}
+
 <h1>{{ course.name }}</h1>
 <h2> Students </h2>  
     {% if students %}
@@ -20,7 +23,7 @@
             {% for student in students %}
             <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
                 <td>
-                    {{ student.matrikelNr }}
+                    {{ student.matrikel_nr }}
                 </td>
                 <td>
                     {{ student.user.first_name }} {{ student.user.last_name }}
@@ -51,10 +54,10 @@
             {% for assessment in assessments %}
             <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
                 <td>
-                    {{ assessment.assessmentId }}
+                    {{ assessment.assessment_id }}
                 </td>
                 <td>
-                    <a href="{% url 'assessment-detail' assessment.assessmentId %}">{{ assessment.name }}</a>
+                    <a href="{% url 'assessment-detail' assessment.assessment_id %}">{{ assessment.name }}</a>
                 </td>
                 <td>
                     {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }}
@@ -65,6 +68,10 @@
     {% else %}
     No assessments
     {% endif %}
+{% else %}
+<h1>403 Permission denied</h1>
+You are not the lecturer of this course or a student!
+{% endif %}
 <br>
 <a href="{% url 'course-list' %}">All courses</a>
 {% endblock %}
