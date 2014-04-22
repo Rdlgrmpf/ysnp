@@ -2,6 +2,9 @@
 {% block title %}XPass - {{ assignment.name }}{% endblock %}
 {% block content %}
 <h1>{{ assignment.name }}</h1>
+{% if perms.ysnp.change_assignment %}
+    <a href="{% url 'assignment-update' assignment.assignment_id %}">Edit</a><br>
+{% endif %}
 <b>Name:</b> {{ assignment.name }}<br>
 <b>Tolerance:</b> {{ assignment.tolerance }}<br>
 <b>Assessment:</b> <a href="{% url 'assessment-detail' assignment.assessment.assessment_id %}">{{assignment.assessment.name}}</a><br>

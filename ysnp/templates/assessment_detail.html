@@ -2,6 +2,9 @@
 {% block title %}XPass - {{ assessment.name }}{% endblock %}
 {% block content %}
 <h1>{{ assessment.name }}</h1>
+{% if perms.ysnp.change_assignment %}
+    <a href="{% url 'assessment-update' assessment.assessment_id %}">Edit</a><br>
+{% endif %}
 <p>
     <b>Assessor:</b> {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }} <br>
     <b>Course:</b> <a href="{% url 'course-detail' assessment.course.course_id %}">{{ assessment.course.name }}</a>
@@ -19,6 +22,11 @@
                 <th>
                     Tolerance
                 </th>
+                {% if perms.ysnp.change_assignment %}
+                <th>
+                    Edit
+                </th>
+                {% endif %}
             </tr>
             {% for assignment in assignments %}
             <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
@@ -31,6 +39,11 @@
                 <td>
                     {{ assignment.tolerance }}
                 </td>
+                {% if perms.ysnp.change_assignment %}
+                <td>
+                    <a href="{% url 'assignment-update' assignment.assignment_id %}">edit</a>
+                </td>
+                {% endif %}
             </tr>
             {%  endfor %}
         </table>

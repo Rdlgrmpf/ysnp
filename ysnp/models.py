@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 class OccupationManager(models.Manager):
 	def get_students(self):
@@ -45,6 +46,9 @@ class Course(models.Model):
 	def __unicode__(self):
 		return str(self.course_id) + ' ' + self.name + ' by ' + self.lecturer.user.first_name + ' ' + self.lecturer.user.last_name
 
+	def get_absolute_url(self):
+		return reverse('course-detail', args=[str(self.course_id)])
+
 	class Meta:
 		db_table = 'Course'
 
@@ -57,6 +61,9 @@ class Assessment(models.Model):
 	def __unicode__(self):
 		return str(self.assessment_id) + ' ' + self.name + ' in ' + str(self.course.name) +  ' graded by ' + self.assessor.user.first_name + ' ' + self.assessor.user.last_name
 
+	def get_absolute_url(self):
+		return reverse('assessment-detail', args=[str(self.assessment_id)])
+
 	class Meta:
 		db_table = 'Assessment'
 
@@ -68,6 +75,9 @@ class Assignment(models.Model):
 
 	def __unicode__(self):
 		return str(self.assignment_id) + ' ' + self.name + ' part of ' + str(self.assessment.name)
+
+	def get_absolute_url(self):
+		return reverse('assignment-detail', args=[str(self.assignment_id)])
 
 	class Meta:
 		db_table = 'Assignment'

@@ -10,7 +10,11 @@ from ysnp import forms
 
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'base.html'
-    
+
+###
+#   Courses
+###
+
 class CourseListView(LoginRequiredMixin, ListView):
     model = Course
     template_name = 'course_list.html'
@@ -55,6 +59,10 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
             context['assessments'] = Assessment.objects.filter(course=self.object)
         return context
 
+###
+#   Assessments
+###
+
 class AssessmentListView(LoginRequiredMixin, ListView):
     model = Assessment
     template_name = 'assessment_list.html'
@@ -73,6 +81,7 @@ class AssessmentDetailView(LoginRequiredMixin, DetailView):
 
 class AssessmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = "ysnp.add_assessment"
+    raise_exception = True
     model = Assessment
     template_name = 'assessment_create.html'
     form_class = forms.AssessmentForm
@@ -82,10 +91,31 @@ class AssessmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
         kwargs['possible_courses'] = Course.objects.filter(lecturer=self.request.user.profile)
         return kwargs
 
-class AssessmentUpdateView(LoginRequiredMixin, UpdateView):
+    def get_context_data(self, **kwargs):
+        context = super(AssessmentCreateView, self).get_context_data(**kwargs)
+        context['submit_text'] = 'Create'
+        return context
+
+class AssessmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = "ysnp.change_assessment"
+    raise_exception = True
     model = Assessment
-    template_name = 'assessment_create'
-    form_class = 'AssessmentForm'
+    template_name = 'assessment_create.html'
+    form_class = forms.AssessmentForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AssessmentUpdateView, self).get_form_kwargs()
+        kwargs['possible_courses'] = Course.objects.filter(lecturer=self.request.user.profile)
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(AssessmentUpdateView, self).get_context_data(**kwargs)
+        context['submit_text'] = 'Update'
+        return context
+
+###
+#   Assignments
+###
 
 class AssignmentListView(LoginRequiredMixin, ListView):
     model = Assignment
@@ -103,7 +133,45 @@ class AssignmentDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(AssignmentDetailView, self).get_context_data(**kwargs)
-        return context  
+        return context
+
+class AssignmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = "ysnp.add_assignment"
+    raise_exception = True
+    model = Assignment
+    template_name = 'assignment_create.html'
+    form_class = forms.AssignmentForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AssignmentCreateView, self).get_form_kwargs()
+        kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(AssignmentCreateView, self).get_context_data(**kwargs)
+        context['submit_text'] = 'Create'
+        return context
+
+class AssignmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = "ysnp.change_assignment"
+    raise_exception = True
+    model = Assignment
+    template_name = 'assignment_create.html'
+    form_class = forms.AssignmentForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AssignmentUpdateView, self).get_form_kwargs()
+        kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(AssignmentUpdateView, self).get_context_data(**kwargs)
+        context['submit_text'] = 'Update'
+        return context
+
+###
+#   Miscellaneous
+###
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     model = User

@@ -23,9 +23,11 @@
 				<li class="unterpunkt">
 					<a href="{% url 'assessment-list' %}">List</a>
 				</li>
+				{% if perms.ysnp.add_assessment %}
 				<li class="unterpunkt">
 					<a href="{% url 'assessment-create' %}">Add</a>
 				</li>
+				{% endif %}
 			</ul>
 		</li>
 		<li class="main">
@@ -34,6 +36,11 @@
 				<li class="unterpunkt">
 					<a href="{% url 'assignment-list' %}">List</a>
 				</li>
+				{% if perms.ysnp.add_assignment %}
+				<li class="unterpunkt">
+					<a href="{% url 'assignment-create' %}">Add</a>
+				</li>
+				{% endif %}
 			</ul>
 		</li>
         <li class="main">

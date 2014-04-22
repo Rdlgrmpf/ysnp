@@ -16,6 +16,11 @@
         <th>
 			Assessor
 		</th>
+		{% if perms.ysnp.change_assignment %}
+		<th>
+			Edit
+		</th>
+		{% endif %}
 	</tr>
 	{% for assessment in assessments %}
 	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
@@ -31,6 +36,11 @@
         <td>
 			{{assessment.assessor.user.first_name}} {{assessment.assessor.user.last_name}}
 		</td>
+		{% if perms.ysnp.change_assessment %}
+		<td>
+            <a href="{% url 'assessment-update' assessment.assessment_id %}">edit</a>
+		</td>
+		{% endif %}
 	</tr>
 	{%  endfor %}
 </table>

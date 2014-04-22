@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.views import login, logout, password_change
 from django.shortcuts import render_to_response
 
-from .views import Home, CourseListView, CourseDetailView, AssessmentListView, AssessmentDetailView, AssessmentCreateView, AssessmentUpdateView, AssignmentListView, AssignmentDetailView, ProfileView, PasswordSuccessView
+from .views import Home, CourseListView, CourseDetailView, AssessmentListView, AssessmentDetailView, AssessmentCreateView, AssessmentUpdateView, AssignmentListView, AssignmentCreateView, AssignmentUpdateView, AssignmentDetailView, ProfileView, PasswordSuccessView
 
 admin.autodiscover()
 
@@ -19,7 +19,9 @@ urlpatterns = patterns('',
     url(r'^assessments/(?P<pk>[0-9]+)/$',AssessmentDetailView.as_view(), name='assessment-detail'),
     url(r'^assessments/(?P<pk>[0-9]+)/edit$',AssessmentUpdateView.as_view(), name='assessment-update'),
     url(r'^assignments/$', AssignmentListView.as_view(), name='assignment-list'),
+    url(r'^assignments/add/$', AssignmentCreateView.as_view(), name='assignment-create'),
     url(r'^assignments/(?P<pk>[0-9]+)/$',AssignmentDetailView.as_view(), name='assignment-detail'),
+    url(r'^assignments/(?P<pk>[0-9]+)/edit$',AssignmentUpdateView.as_view(), name='assignment-update'),
     url(r'^profile/$', ProfileView.as_view(), name='user-profile'),
     url(r'^profile/password/change/$',password_change, {'template_name': 'passwordChange.html', 'post_change_redirect' : '/profile/password/change/successful'}, name='user-change-password'),
     url(r'^profile/password/change/successful/$', PasswordSuccessView.as_view()),

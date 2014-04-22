@@ -16,6 +16,11 @@
         <th>
 			Assessment
 		</th>
+		{% if perms.ysnp.change_assignment %}
+		<th>
+			Edit
+		</th>
+		{% endif %}
 	</tr>
 	{% for assignment in assignments %}
 	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
@@ -23,7 +28,7 @@
 			{{assignment.assignment_id}}
 		</td>
         <td>
-			{{assignment.name}}
+            <a href="{% url 'assignment-detail' assignment.assignment_id %}">{{assignment.name}}</a>
 		</td>
         <td>
 			{{assignment.tolerance}}
@@ -31,6 +36,11 @@
 		<td>
             <a href="{% url 'assessment-detail' assignment.assessment.assessment_id %}">{{assignment.assessment.name}}</a>
 		</td>
+		{% if perms.ysnp.change_assignment %}
+		<td>
+            <a href="{% url 'assignment-update' assignment.assignment_id %}">edit</a>
+		</td>
+		{% endif %}
 	</tr>
 	{%  endfor %}
 </table>
