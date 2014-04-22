@@ -20,13 +20,13 @@
 	{% for assessment in assessments %}
 	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
 		<td>
-			{{assessment.assessmentId}}
+			{{assessment.assessment_id}}
 		</td>
 		<td>
-            <a href="{% url 'assessment-detail' assessment.assessmentId %}">{{assessment.name}}</a>
+            <a href="{% url 'assessment-detail' assessment.assessment_id %}">{{assessment.name}}</a>
 		</td>
         <td>
-			<a href="{% url 'course-detail' assessment.course.courseId %}">{{assessment.course.name}}</a>
+			<a href="{% url 'course-detail' assessment.course.course_id %}">{{assessment.course.name}}</a>
 		</td>
         <td>
 			{{assessment.assessor.user.first_name}} {{assessment.assessor.user.last_name}}

@@ -4,7 +4,7 @@
 <h1>{{ assessment.name }}</h1>
 <p>
     <b>Assessor:</b> {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }} <br>
-    <b>Course:</b> <a href="{% url 'course-detail' assessment.course.courseId %}">{{ assessment.course.name }}</a>
+    <b>Course:</b> <a href="{% url 'course-detail' assessment.course.course_id %}">{{ assessment.course.name }}</a>
 </p>
 <h2> Assignments </h2>
     {% if assignments %}
@@ -23,10 +23,10 @@
             {% for assignment in assignments %}
             <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
                 <td>
-                    {{ assignment.assignmentId }}
+                    {{ assignment.assignment_id }}
                 </td>
                 <td>
-                    <a href="{% url 'assignment-detail' assignment.assignmentId %}">{{assignment.name}}</a>
+                    <a href="{% url 'assignment-detail' assignment.assignment_id %}">{{assignment.name}}</a>
                 </td>
                 <td>
                     {{ assignment.tolerance }}

@@ -20,7 +20,7 @@
 	{% for assignment in assignments %}
 	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
 		<td>
-			{{assignment.assignmentId}}
+			{{assignment.assignment_id}}
 		</td>
         <td>
 			{{assignment.name}}
@@ -29,7 +29,7 @@
 			{{assignment.tolerance}}
 		</td>
 		<td>
-            <a href="{% url 'assessment-detail' assignment.assessment.assessmentId %}">{{assignment.assessment.name}}</a>
+            <a href="{% url 'assessment-detail' assignment.assessment.assessment_id %}">{{assignment.assessment.name}}</a>
 		</td>
 	</tr>
 	{%  endfor %}

@@ -4,7 +4,7 @@
 <h1>{{ assignment.name }}</h1>
 <b>Name:</b> {{ assignment.name }}<br>
 <b>Tolerance:</b> {{ assignment.tolerance }}<br>
-<b>Assessment:</b> <a href="{% url 'assessment-detail' assignment.assessment.assessmentId %}">{{assignment.assessment.name}}</a><br>
+<b>Assessment:</b> <a href="{% url 'assessment-detail' assignment.assessment.assessment_id %}">{{assignment.assessment.name}}</a><br>
 
 <br><a href="{% url 'assignment-list' %}">All assignments</a>
 {% endblock %}
