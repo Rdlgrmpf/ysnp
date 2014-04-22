@@ -3,9 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
-from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView, CreateView, UpdateView
 from braces.views import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course
+from ysnp import forms
 
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'base.html'
@@ -46,11 +47,12 @@ class CourseDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         context['allowed'] = self.test_func(self.request.user)
-        context['students'] = Profile.occupation.get_students().filter(student_course__course__course_id=self.kwargs.get('pk'))
-        for student in context['students']:
-            student.semester = Student_Course.objects.get(course=self.object, student=student).semester
-            
-        context['assessments'] = Assessment.objects.filter(course=self.object)
+        if context['allowed']:
+            context['students'] = Profile.occupation.get_students().filter(student_course__course__course_id=self.kwargs.get('pk'))
+            for student in context['students']:
+                student.semester = Student_Course.objects.get(course=self.object, student=student).semester
+                
+            context['assessments'] = Assessment.objects.filter(course=self.object)
         return context
 
 class AssessmentListView(LoginRequiredMixin, ListView):
@@ -67,7 +69,23 @@ class AssessmentDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(AssessmentDetailView, self).get_context_data(**kwargs)
         context['assignments'] = Assignment.objects.filter(assessment=self.object)
-        return context       
+        return context
+
+class AssessmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = "ysnp.add_assessment"
+    model = Assessment
+    template_name = 'assessment_create.html'
+    form_class = forms.AssessmentForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AssessmentCreateView, self).get_form_kwargs()
+        kwargs['possible_courses'] = Course.objects.filter(lecturer=self.request.user.profile)
+        return kwargs
+
+class AssessmentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Assessment
+    template_name = 'assessment_create'
+    form_class = 'AssessmentForm'
 
 class AssignmentListView(LoginRequiredMixin, ListView):
     model = Assignment
