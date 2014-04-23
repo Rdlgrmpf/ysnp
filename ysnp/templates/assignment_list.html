@@ -18,7 +18,7 @@
 		</th>
 		{% if perms.ysnp.change_assignment %}
 		<th>
-			Edit
+			
 		</th>
 		{% endif %}
 	</tr>
@@ -38,7 +38,7 @@
 		</td>
 		{% if perms.ysnp.change_assignment %}
 		<td>
-            <a href="{% url 'assignment-update' assignment.assignment_id %}">edit</a>
+            <a href="{% url 'assignment-update' assignment.assignment_id %}" class="button">Edit</a>
 		</td>
 		{% endif %}
 	</tr>
