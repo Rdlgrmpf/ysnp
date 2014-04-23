@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{{ assignment.name }}</h1>
 {% if perms.ysnp.change_assignment %}
-    <a href="{% url 'assignment-update' assignment.assignment_id %}">Edit</a><br>
+    <a href="{% url 'assignment-update' assignment.assignment_id %}" class="button">Edit</a><br>
 {% endif %}
 <b>Name:</b> {{ assignment.name }}<br>
 <b>Tolerance:</b> {{ assignment.tolerance }}<br>

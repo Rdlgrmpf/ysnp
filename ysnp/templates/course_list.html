@@ -20,7 +20,7 @@
 	{% for course in courses %}
 	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
 		<td>
-			{{course.courseId}}
+			{{course.course_id}}
 		</td>
 		<td>
             <a href="{% url 'course-detail' course.course_id %}">{{course.name}}</a>

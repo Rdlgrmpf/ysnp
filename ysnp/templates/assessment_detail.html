@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{{ assessment.name }}</h1>
 {% if perms.ysnp.change_assignment %}
-    <a href="{% url 'assessment-update' assessment.assessment_id %}">Edit</a><br>
+    <a href="{% url 'assessment-update' assessment.assessment_id %}" class="button">Edit</a><br>
 {% endif %}
 <p>
     <b>Assessor:</b> {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }} <br>
