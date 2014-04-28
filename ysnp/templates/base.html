@@ -19,7 +19,7 @@
         <div id="footerdiv">
             <div>
                 {% block footer %}
-                Last login: {{ user.last_login }}
+                Last login: {{ user.last_login }} | Current user: {{ user.first_name }} {{ user.last_name }}
                 {% endblock %}
             </div>
         </div>        

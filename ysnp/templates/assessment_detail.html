@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}XPass - {{ assessment.name }}{% endblock %}
 {% block content %}
+{% if allowed %}
 <h1>{{ assessment.name }}</h1>
 {% if perms.ysnp.change_assignment %}
     <a href="{% url 'assessment-update' assessment.assessment_id %}" class="button">Edit</a><br>
@@ -50,6 +51,10 @@
     {% else %}
         No assignments.
     {% endif %}
+{% else %}
+<h1>403 Permission denied</h1>
+You don't have sufficient permission. 
+{% endif %}
 <br>
 <a href="{% url 'assessment-list' %}">All assessments</a>
 {% endblock %}

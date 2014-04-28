@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
 from django.views.generic import DetailView, ListView, TemplateView, CreateView, UpdateView
 from braces.views import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from itertools import chain
 from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course
 from ysnp import forms
 
@@ -68,15 +70,36 @@ class AssessmentListView(LoginRequiredMixin, ListView):
     template_name = 'assessment_list.html'
     context_object_name = 'assessments'
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.profile.is_student():
+            return Assessment.objects.filter(course__student_course__student=user.profile)
+        else:
+            return Assessment.objects.filter(Q(course__lecturer=user.profile)|Q(assessor=user.profile)).distinct()
+
 
 class AssessmentDetailView(LoginRequiredMixin, DetailView):
     model = Assessment
     template_name = 'assessment_detail.html'
     context_object_name = 'assessment'
+
+    def test_func(self, user):
+        permission = False
+        if user.profile.is_lecturer():
+            permission = self.object.course.lecturer == user.profile
+        if user.profile.is_student() and not permission:
+            permission = Student_Course.objects.filter(course=self.object.course, student=user.profile).exists()
+        if user.profile.is_assessor() and not permission:
+            permission = self.object.assessor == user.profile
+        
+        return permission
     
     def get_context_data(self, **kwargs):
         context = super(AssessmentDetailView, self).get_context_data(**kwargs)
-        context['assignments'] = Assignment.objects.filter(assessment=self.object)
+        context['allowed'] = self.test_func(self.request.user)
+        if context['allowed']:
+            context['assignments'] = Assignment.objects.filter(assessment=self.object)
+
         return context
 
 class AssessmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -121,6 +144,13 @@ class AssignmentListView(LoginRequiredMixin, ListView):
     model = Assignment
     template_name = 'assignment_list.html'
     context_object_name = 'assignments'
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.profile.is_student():
+            return Assignment.objects.filter(assessment__course__student_course__student=user.profile)
+        else:
+            return Assignment.objects.filter(Q(assessment__course__lecturer=user.profile)|Q(assessment__assessor=user.profile)).distinct()
     
     def get_context_data(self, **kwargs):
         context = super(AssignmentListView, self).get_context_data(**kwargs)
@@ -130,9 +160,21 @@ class AssignmentDetailView(LoginRequiredMixin, DetailView):
     model = Assignment
     template_name = 'assignment_detail.html'
     context_object_name = 'assignment'
+
+    def test_func(self, user):
+        permission = False
+        if user.profile.is_lecturer():
+            permission = self.object.assessment.course.lecturer == user.profile
+        if user.profile.is_student() and not permission:
+            permission = Student_Course.objects.filter(course=self.object.assessment.course, student=user.profile).exists()
+        if user.profile.is_assessor() and not permission:
+            permission = self.object.assessment.assessor == user.profile
+        
+        return permission
     
     def get_context_data(self, **kwargs):
         context = super(AssignmentDetailView, self).get_context_data(**kwargs)
+        context['allowed'] = self.test_func(self.request.user)
         return context
 
 class AssignmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -168,6 +210,54 @@ class AssignmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         context = super(AssignmentUpdateView, self).get_context_data(**kwargs)
         context['submit_text'] = 'Update'
         return context
+
+###
+#   Criterion
+###
+'''
+class CriterionDetailView(LoginRequiredMixin, DetailView):
+    model = Criterion
+    template_name = 'assignment_detail.html'
+    context_object_name = 'assignment'
+    
+    def get_context_data(self, **kwargs):
+        context = super(AssignmentDetailView, self).get_context_data(**kwargs)
+        return context
+
+class CriterionCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = "ysnp.add_criterion"
+    raise_exception = True
+    model = Criterion
+    template_name = 'assignment_create.html'
+    form_class = forms.AssignmentForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AssignmentCreateView, self).get_form_kwargs()
+        kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(AssignmentCreateView, self).get_context_data(**kwargs)
+        context['submit_text'] = 'Create'
+        return context
+
+class CriterionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = "ysnp.change_criterion"
+    raise_exception = True
+    model = Criterion
+    template_name = 'assignment_create.html'
+    form_class = forms.AssignmentForm
+
+    def get_form_kwargs(self):
+        kwargs = super(AssignmentUpdateView, self).get_form_kwargs()
+        kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(AssignmentUpdateView, self).get_context_data(**kwargs)
+        context['submit_text'] = 'Update'
+        return context
+'''
 
 ###
 #   Miscellaneous
