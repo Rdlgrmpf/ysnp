@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.views import login, logout, password_change
 from django.shortcuts import render_to_response
 
-from .views import Home, CourseListView, CourseDetailView, AssessmentListView, AssessmentDetailView, AssessmentCreateView, AssessmentUpdateView, AssignmentListView, AssignmentCreateView, AssignmentUpdateView, AssignmentDetailView, ProfileView, PasswordSuccessView
+from .views import Home, CourseListView, CourseDetailView, AssessmentListView, AssessmentDetailView, AssessmentCreateView, AssessmentUpdateView, AssignmentListView, AssignmentCreateView, AssignmentUpdateView, AssignmentDetailView, CriterionDetailView, CriterionCreateView, CriterionUpdateView, ScoreLevelCreateView, ScoreLevelUpdateView, ProfileView, PasswordSuccessView
 
 admin.autodiscover()
 
@@ -22,9 +22,11 @@ urlpatterns = patterns('',
     url(r'^assignments/add/$', AssignmentCreateView.as_view(), name='assignment-create'),
     url(r'^assignments/(?P<pk>[0-9]+)/$',AssignmentDetailView.as_view(), name='assignment-detail'),
     url(r'^assignments/(?P<pk>[0-9]+)/edit$',AssignmentUpdateView.as_view(), name='assignment-update'),
-    #url(r'^criteria/(?P<pk>[0-9]+)/$', CriterionDetailView.as_view(), name='criterion-detail'),
-    #url(r'^criteria/(?P<assignment_id>[0-9]+)/add/$', CriterionCreateView.as_view(), name='criterion-create'),
-    #url(r'^criteria/$', CriterionDetailView.as_view(), name='criterion-detail'),
+    url(r'^criteria/(?P<pk>[0-9]+)/$', CriterionDetailView.as_view(), name='criterion-detail'),
+    url(r'^criteria/(?P<assignment_id>[0-9]+)/add/$', CriterionCreateView.as_view(), name='criterion-create'),
+    url(r'^criteria/(?P<pk>[0-9]+)/edit/$', CriterionUpdateView.as_view(), name='criterion-update'),
+    url(r'^scorelevel/(?P<assignment_id>[0-9]+)/add/$', ScoreLevelCreateView.as_view(), name='scorelevel-create'),
+    url(r'^scorelevel/(?P<pk>[0-9]+)/edit/$', ScoreLevelUpdateView.as_view(), name='scorelevel-update'),
     url(r'^profile/$', ProfileView.as_view(), name='user-profile'),
     url(r'^profile/password/change/$',password_change, {'template_name': 'passwordChange.html', 'post_change_redirect' : '/profile/password/change/successful'}, name='user-change-password'),
     url(r'^profile/password/change/successful/$', PasswordSuccessView.as_view()),

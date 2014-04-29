@@ -101,6 +101,9 @@ class Criterion(models.Model):
 	def __unicode__(self):
 		return str(self.criterion_id) + ' ' + self.name
 
+	def get_absolute_url(self):
+		return reverse('criterion-detail', args=[str(self.criterion_id)])
+
 	class Meta:
 		db_table = 'Criterion'
 

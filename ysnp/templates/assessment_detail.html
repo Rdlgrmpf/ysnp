@@ -51,6 +51,9 @@
     {% else %}
         No assignments.
     {% endif %}
+{% if perms.ysnp.create_assignment %}
+    <a href="{% url 'assignment-create' %}" class="button">Add assignment</a><br>
+{% endif %}
 {% else %}
 <h1>403 Permission denied</h1>
 You don't have sufficient permission. 

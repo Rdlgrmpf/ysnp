@@ -10,6 +10,82 @@
 <b>Tolerance:</b> {{ assignment.tolerance }}<br>
 <b>Assessment:</b> <a href="{% url 'assessment-detail' assignment.assessment.assessment_id %}">{{assignment.assessment.name}}</a><br>
 
+<h2> Criteria </h2>
+    {% if criteria %}
+        <table class="liste">
+            <tr class="liste-header">
+                <th>
+                    ID
+                </th>
+                <th>
+                    Name
+                </th>
+                {% if perms.ysnp.change_criterion %}
+                <th>
+                    Edit
+                </th>
+                {% endif %}
+            </tr>
+            {% for criterion in criteria %}
+            <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+                <td>
+                    {{ criterion.criterion_id }}
+                </td>
+                <td>
+                    {{criterion.name}}
+                </td>
+                {% if perms.ysnp.change_criterion %}
+                <td>
+                    <a href="{% url 'criterion-update' criterion.criterion_id %}">edit</a>
+                </td>
+                {% endif %}
+            </tr>
+            {%  endfor %}
+        </table>
+    {% else %}
+        No criteria. <br>
+    {% endif %}
+
+<a href="{% url 'criterion-create' assignment.assignment_id %}" class="button">Add Criterion</a>
+
+<h2> Score-Levels </h2>
+    {% if scorelevels %}
+        <table class="liste">
+            <tr class="liste-header">
+                <th>
+                    ID
+                </th>
+                <th>
+                    Level
+                </th>
+                {% if perms.ysnp.change_criterion %}
+                <th>
+                    Edit
+                </th>
+                {% endif %}
+            </tr>
+            {% for scorelevel in scorelevels %}
+            <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+                <td>
+                    {{ scorelevel.score_level_id }}
+                </td>
+                <td>
+                    {{scorelevel.level}}
+                </td>
+                {% if perms.ysnp.change_scorelevel %}
+                <td>
+                    <a href="{% url 'scorelevel-update' scorelevel.score_level_id %}">edit</a>
+                </td>
+                {% endif %}
+            </tr>
+            {%  endfor %}
+        </table>
+    {% else %}
+        No Score-Levels. <br>
+    {% endif %}
+
+<a href="{% url 'scorelevel-create' assignment.assignment_id %}" class="button">Add Score-Level</a>
+
 {% else %}
 <h1>403 Permission denied</h1>
 You have insufficient permission. 

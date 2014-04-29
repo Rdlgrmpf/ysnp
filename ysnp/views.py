@@ -7,8 +7,9 @@ from django.template import RequestContext, Template
 from django.views.generic import DetailView, ListView, TemplateView, CreateView, UpdateView
 from braces.views import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from itertools import chain
-from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course
+from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course, Criterion, ScoreLevel
 from ysnp import forms
+from django.core.urlresolvers import reverse
 
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'base.html'
@@ -175,6 +176,9 @@ class AssignmentDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(AssignmentDetailView, self).get_context_data(**kwargs)
         context['allowed'] = self.test_func(self.request.user)
+        if context['allowed']:
+            context['criteria'] = Criterion.objects.filter(assignment=self.object)
+            context['scorelevels'] = ScoreLevel.objects.filter(assignment=self.object)
         return context
 
 class AssignmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -214,30 +218,35 @@ class AssignmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
 ###
 #   Criterion
 ###
-'''
+
 class CriterionDetailView(LoginRequiredMixin, DetailView):
     model = Criterion
-    template_name = 'assignment_detail.html'
-    context_object_name = 'assignment'
+    template_name = 'criterion_detail.html'
+    context_object_name = 'criterion'
     
     def get_context_data(self, **kwargs):
-        context = super(AssignmentDetailView, self).get_context_data(**kwargs)
+        context = super(CriterionDetailView, self).get_context_data(**kwargs)
         return context
 
 class CriterionCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = "ysnp.add_criterion"
     raise_exception = True
     model = Criterion
-    template_name = 'assignment_create.html'
-    form_class = forms.AssignmentForm
+    template_name = 'criterion_create.html'
+    form_class = forms.CriterionForm
+    success_url = '.'
 
     def get_form_kwargs(self):
-        kwargs = super(AssignmentCreateView, self).get_form_kwargs()
-        kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
+        kwargs = super(CriterionCreateView, self).get_form_kwargs()
         return kwargs
 
+    def form_valid(self, form):
+        form.instance.assignment = Assignment.objects.get(assignment_id=self.kwargs.get('assignment_id'))
+        self.success_url = reverse('assignment-detail', kwargs={'pk': self.kwargs.get('assignment_id')})
+        return super(CriterionCreateView, self).form_valid(form)
+
     def get_context_data(self, **kwargs):
-        context = super(AssignmentCreateView, self).get_context_data(**kwargs)
+        context = super(CriterionCreateView, self).get_context_data(**kwargs)
         context['submit_text'] = 'Create'
         return context
 
@@ -245,19 +254,69 @@ class CriterionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
     permission_required = "ysnp.change_criterion"
     raise_exception = True
     model = Criterion
-    template_name = 'assignment_create.html'
-    form_class = forms.AssignmentForm
+    template_name = 'criterion_create.html'
+    form_class = forms.CriterionForm
+    success_url = '.'
 
     def get_form_kwargs(self):
-        kwargs = super(AssignmentUpdateView, self).get_form_kwargs()
-        kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
+        kwargs = super(CriterionUpdateView, self).get_form_kwargs()
         return kwargs
 
+    def form_valid(self, form):
+        self.success_url = reverse('assignment-detail', kwargs={'pk': form.instance.assignment.assignment_id})
+        return super(CriterionUpdateView, self).form_valid(form)
+
     def get_context_data(self, **kwargs):
-        context = super(AssignmentUpdateView, self).get_context_data(**kwargs)
+        context = super(CriterionUpdateView, self).get_context_data(**kwargs)
         context['submit_text'] = 'Update'
         return context
-'''
+
+###
+#   ScoreLevel
+###
+
+class ScoreLevelCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = "ysnp.add_scorelevel"
+    raise_exception = True
+    model = ScoreLevel
+    template_name = 'scorelevel_create.html'
+    form_class = forms.ScoreLevelForm
+    success_url = '.'
+
+    def get_form_kwargs(self):
+        kwargs = super(ScoreLevelCreateView, self).get_form_kwargs()
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.assignment = Assignment.objects.get(assignment_id=self.kwargs.get('assignment_id'))
+        self.success_url = reverse('assignment-detail', kwargs={'pk': self.kwargs.get('assignment_id')})
+        return super(ScoreLevelCreateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(ScoreLevelCreateView, self).get_context_data(**kwargs)
+        context['submit_text'] = 'Create'
+        return context
+
+class ScoreLevelUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = "ysnp.change_scorelevel"
+    raise_exception = True
+    model = ScoreLevel
+    template_name = 'scorelevel_create.html'
+    form_class = forms.ScoreLevelForm
+    success_url = '.'
+
+    def get_form_kwargs(self):
+        kwargs = super(ScoreLevelUpdateView, self).get_form_kwargs()
+        return kwargs
+
+    def form_valid(self, form):
+        self.success_url = reverse('assignment-detail', kwargs={'pk': form.instance.assignment.assignment_id})
+        return super(ScoreLevelUpdateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(ScoreLevelUpdateView, self).get_context_data(**kwargs)
+        context['submit_text'] = 'Update'
+        return context
 
 ###
 #   Miscellaneous
