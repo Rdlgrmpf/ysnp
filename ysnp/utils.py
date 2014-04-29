@@ -18,8 +18,18 @@ class Utils(object):
         Constructor
         '''
         
-    def scoreToScore(self):
-        pass
+    def scoreToScore(self, scores, weights, lenience):
+        sMin = 1
+        sMax = 1
+        
+        for i in range(0, len(scores)-1):
+            sMin *= math.pow(scores[i], weights[i])
+            sMax *= math.pow(1 - scores[i], weights[i])
+            
+        sMax = 1 - sMax
+        return (1 - lenience) * sMin + lenience * sMax
+        
+        
     
     def rateToScore(self):
         pass
