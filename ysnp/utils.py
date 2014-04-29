@@ -30,9 +30,21 @@ class Utils(object):
         return (1 - lenience) * sMin + lenience * sMax
         
         
+    def refining(self, impact, performance, score):
+        if performance == "inf":
+            score = score / (1 - impact * (1 - score))
+        else:
+            score = score * (1 - (impact * (1 - score)) ^ performance) / (1 - impact * (1 - score))
+        return score
     
-    def rateToScore(self):
-        pass
+    
+    def rateToScore(self, rates, impacts, score, i):
+        ''' Call with len(rates)-1 as i when calling first time '''
+        if(i != 0):
+            return self.refining(impacts[i], rates[i], self.rateToScore(rates, impacts, score, i-1))
+        else:
+            return self.refining(impacts[i], rates[i], score)
+    
     
     def profileToScore(self, profile, tolerance):
         #Number of quality categories
