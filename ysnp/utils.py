@@ -17,6 +17,8 @@ class Utils(object):
         '''
         Constructor
         '''
+        print self.scoreToScore([0.6, 0.75, 0.55], [0.3, 0.3, 0.4], 0.2)
+        print self.rateToScore([2.0, 1.38, 1.0], [0.5, 0.5, 0.5], 0.75, 2)
         
     def scoreToScore(self, scores, weights, lenience):
         sMin = 1
@@ -34,7 +36,7 @@ class Utils(object):
         if performance == "inf":
             score = score / (1 - impact * (1 - score))
         else:
-            score = score * (1 - (impact * (1 - score)) ^ performance) / (1 - impact * (1 - score))
+            score = score * (1 - math.pow(impact * (1 - score), performance)) / (1 - impact * (1 - score))
         return score
     
     
