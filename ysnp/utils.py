@@ -79,7 +79,22 @@ class Utils(object):
         rUpper = rUpper / (num - 1)
         
         return (1 - tolerance) * min(rUpper, rLower) + tolerance * max(rUpper, rLower)
+
+
+        def scoreToGrade(score, model='Pass', curvature, polarity, gMin, gMax):
+            curvature= pow((1-pow(score, curvature)), (1/curvature));
+            g = polarity*curvature+(1-polarity)*(1-curvature);
+            return g * gMin + (1-g)*gMax; 
         
+        
+        def scoreToRate(score, standart, impact):
+            if(standart==0 or standart==1 or impact==0 ):
+                return 1;
+            elif (score<(standart/(1-impact*(1-standart)))):
+                return math.log(1 - score * (1 - impact * (1 - standart)) / standart) / math.log(impact * (1 - standart));
+            else :
+                return -1;
+          
         
 Utils(1)      
             
