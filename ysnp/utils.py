@@ -18,12 +18,6 @@ class Utils(object):
         '''
         Constructor
         '''
-        print "Score2Score {}".format(self.scoreToScore([0.6, 0.75, 0.55], [0.3, 0.3, 0.4], 0.2))
-        print "Rate2Score {}".format(self.rateToScore([2.0, 1.38, 1.0], [0.5, 0.5, 0.5], 0.75, 2))
-        print "An {}".format(self.profileToScore([0.1, 0.25, 0.25, 0.25, 0.15], 0.5))
-        print "Hn {}".format(self.profileToScore([0.05, 0.05, 0.30, 0.40, 0.20], 0.5))
-        print "H2 {}".format(self.profileToScore([0.1, 0.9], 0.6))
-        print "A2 {}".format(self.profileToScore([0.15, 0.85], 0.0))
 
         
     def scoreToScore(self, scores, weights, lenience):
@@ -81,20 +75,16 @@ class Utils(object):
         return (1 - tolerance) * min(rUpper, rLower) + tolerance * max(rUpper, rLower)
 
 
-        def scoreToGrade(score, model='Pass', curvature, polarity, gMin, gMax):
-            curvature= pow((1-pow(score, curvature)), (1/curvature));
-            g = polarity*curvature+(1-polarity)*(1-curvature);
-            return g * gMin + (1-g)*gMax; 
-        
-        
-        def scoreToRate(score, standart, impact):
-            if(standart==0 or standart==1 or impact==0 ):
-                return 1;
-            elif (score<(standart/(1-impact*(1-standart)))):
-                return math.log(1 - score * (1 - impact * (1 - standart)) / standart) / math.log(impact * (1 - standart));
-            else :
-                return -1;
-          
-        
-Utils(1)      
-            
+    def scoreToGrade(self, score, curvature, polarity, gMin, gMax):
+        curvature= pow((1-pow(score, curvature)), (1/curvature));
+        g = polarity*curvature+(1-polarity)*(1-curvature);
+        return g * gMin + (1-g)*gMax; 
+    
+    
+    def scoreToRate(self, score, standart, impact):
+        if(standart==0 or standart==1 or impact==0 ):
+            return 1;
+        elif (score<(standart/(1-impact*(1-standart)))):
+            return math.log(1 - score * (1 - impact * (1 - standart)) / standart) / math.log(impact * (1 - standart));
+        else :
+            return -1; 
