@@ -7,6 +7,7 @@ import math
 from scipy import special
 
 
+
 class Utils(object):
     '''
     classdocs
@@ -17,14 +18,13 @@ class Utils(object):
         '''
         Constructor
         '''
-        print self.scoreToScore([0.6, 0.75, 0.55], [0.3, 0.3, 0.4], 0.2)
-        print self.rateToScore([2.0, 1.38, 1.0], [0.5, 0.5, 0.5], 0.75, 2)
+
         
     def scoreToScore(self, scores, weights, lenience):
         sMin = 1
         sMax = 1
         
-        for i in range(0, len(scores)-1):
+        for i in range(0, len(scores)):
             sMin *= math.pow(scores[i], weights[i])
             sMax *= math.pow(1 - scores[i], weights[i])
             
@@ -51,28 +51,40 @@ class Utils(object):
     def profileToScore(self, profile, tolerance):
         #Number of quality categories
         num = len(profile)
-        pLower = []
-        pUpper = []
+        pLower = [0]
+        pUpper = [0]
         
-        for i in range(1,num):
-            pLower.insert(i, pLower(i - 1) + profile[i])
-            pUpper.insert(i, pUpper(i - 1) + profile[num + 1 - i])
         
+        for i in range(1, num+1):
+            pLower.insert(i, pLower[i - 1] + profile[i - 1])
+            pUpper.insert(i, pUpper[i - 1] + profile[num - i])
+        
+
         rLower = 0.0
         rUpper = 0.0
         
-        for i in range(1, num-1):
+        for i in range(1, num):
             if pLower[i] > 0:
-                rLower = rLower + math.e(special.gammaln(i + pLower(i)) - special.gammaln(i + 1) - special.gammaln(pLower(i)))
+                rLower = rLower + math.exp( special.gammaln(i + pLower[i]) - special.gammaln(i + 1) - special.gammaln(pLower[i]) )
             if pUpper[i] > 0:
-                rUpper = rUpper + math.e(special.gammaln(i + pUpper(i)) - special.gammaln(i + 1) - special.gammaln(pUpper(i)))
+                rUpper = rUpper + math.exp( special.gammaln(i + pUpper[i]) - special.gammaln(i + 1) - special.gammaln(pUpper[i]) )
                 
         rLower = 1 - rLower / (num - 1)
         rUpper = rUpper / (num - 1)
         
         return (1 - tolerance) * min(rUpper, rLower) + tolerance * max(rUpper, rLower)
-        
-        
-        
-       
-            
+
+
+    def scoreToGrade(self, score, curvature, polarity, gMin, gMax):
+        curvature= pow((1-pow(score, curvature)), (1/curvature));
+        g = polarity*curvature+(1-polarity)*(1-curvature);
+        return g * gMin + (1-g)*gMax; 
+    
+    
+    def scoreToRate(self, score, standart, impact):
+        if(standart==0 or standart==1 or impact==0 ):
+            return 1;
+        elif (score<(standart/(1-impact*(1-standart)))):
+            return math.log(1 - score * (1 - impact * (1 - standart)) / standart) / math.log(impact * (1 - standart));
+        else :
+            return -1; 
