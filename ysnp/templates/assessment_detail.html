@@ -52,7 +52,7 @@
         No assignments.
     {% endif %}
 {% if perms.ysnp.add_assignment and is_this_lecturer %}
-    <a href="{% url 'assignment-create' %}" class="button">Add assignment</a><br>
+    <a href="{% url 'assignment-create' assessment.assessment_id %}" class="button">Add assignment</a><br>
 {% endif %}
 {% else %}
 <h1>403 Permission denied</h1>

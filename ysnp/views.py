@@ -191,10 +191,16 @@ class AssignmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
     model = Assignment
     template_name = 'assignment_create.html'
     form_class = forms.AssignmentForm
+    success_url = '.'
+
+    def form_valid(self, form):
+        form.instance.assessment = Assessment.objects.get(assessment_id=self.kwargs.get('assessment_id'))
+        self.success_url = reverse('assessment-detail', kwargs={'pk': self.kwargs.get('assessment_id')})
+        return super(AssignmentCreateView, self).form_valid(form)
 
     def get_form_kwargs(self):
         kwargs = super(AssignmentCreateView, self).get_form_kwargs()
-        kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
+        #kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -208,10 +214,15 @@ class AssignmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     model = Assignment
     template_name = 'assignment_create.html'
     form_class = forms.AssignmentForm
+    success_url = '.'
+
+    def form_valid(self, form):
+        self.success_url = reverse('assessment-detail', kwargs={'pk': form.instance.assessment.assessment_id})
+        return super(AssignmentUpdateView, self).form_valid(form)
 
     def get_form_kwargs(self):
         kwargs = super(AssignmentUpdateView, self).get_form_kwargs()
-        kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
+        #kwargs['possible_assessments'] = Assessment.objects.filter(course__lecturer=self.request.user.profile)
         return kwargs
 
     def get_context_data(self, **kwargs):
