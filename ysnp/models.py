@@ -125,7 +125,7 @@ class Criterion_Score(models.Model):
 	number = models.IntegerField()
 
 	def __unicode__(self):
-		return str(self.criterion) + ' ' + str(score_level) + ' ' + str(number)
+		return str(self.criterion.name) + ' ' + str(self.score_level.level) + ' ' + str(self.number)
 
 	class Meta:
 		db_table = 'Criterion_Score'

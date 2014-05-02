@@ -7,7 +7,7 @@ from django.template import RequestContext, Template
 from django.views.generic import DetailView, ListView, TemplateView, CreateView, UpdateView, FormView
 from braces.views import LoginRequiredMixin, PermissionRequiredMixin
 from itertools import chain
-from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course, Criterion, ScoreLevel
+from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course, Criterion, ScoreLevel, Criterion_Score
 from ysnp import forms
 from django.core.urlresolvers import reverse
 
@@ -350,10 +350,18 @@ class GradingView(LoginRequiredMixin, FormView):
         return kwargs
 
     def form_valid(self, form):
+        #get student
+        student = Profile.occupation.get_students().get(profile_id=self.kwargs.get('student_id'))
         #put in scores
+        #same loops as when generated
+        for index, item in enumerate(form.criteria):
+            for index2, item2 in enumerate(form.scorelevels):
+                value = form.cleaned_data['custom_{0}_{1}'.format(index, index2)]
+                s = Criterion_Score(criterion=item, score_level=item2, student=student, number=value)
+                s.save()
         #send email to student and lecturer?
-        form.instance.student = Profile.occupation.get_students().get(profile_id=self.kwargs.get('student_id'))
-        return super(ContactView, self).form_valid(form)
+        self.success_url = reverse('assignment-detail', kwargs={'pk': self.kwargs.get('assignment_id')})
+        return super(GradingView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(GradingView, self).get_context_data(**kwargs)
