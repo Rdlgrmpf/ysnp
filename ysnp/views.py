@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
-from django.views.generic import DetailView, ListView, TemplateView, CreateView, UpdateView
-from braces.views import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.views.generic import DetailView, ListView, TemplateView, CreateView, UpdateView, FormView
+from braces.views import LoginRequiredMixin, PermissionRequiredMixin
 from itertools import chain
 from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course, Criterion, ScoreLevel
 from ysnp import forms
@@ -181,6 +181,7 @@ class AssignmentDetailView(LoginRequiredMixin, DetailView):
         if context['allowed']:
             context['criteria'] = Criterion.objects.filter(assignment=self.object)
             context['scorelevels'] = ScoreLevel.objects.filter(assignment=self.object)
+            context['students'] = Profile.occupation.get_students().filter(student_course__course=self.object.assessment.course)
             context['is_this_lecturer'] = (self.request.user.profile == self.object.assessment.course.lecturer)
             context['is_this_assessor'] = (self.request.user.profile == self.object.assessment.assessor)
         return context
@@ -331,6 +332,38 @@ class ScoreLevelUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     def get_context_data(self, **kwargs):
         context = super(ScoreLevelUpdateView, self).get_context_data(**kwargs)
         context['edit'] = True
+        return context
+
+###
+#   Assessing
+###
+class GradingView(LoginRequiredMixin, FormView):
+    template_name = 'grading.html'
+    form_class = forms.GradingForm
+    success_url = '.'
+
+    def get_form_kwargs(self):
+        kwargs = super(GradingView, self).get_form_kwargs()
+        ass = Assignment.objects.get(assignment_id=self.kwargs.get('assignment_id'))
+        kwargs['scorelevels'] = ScoreLevel.objects.filter(assignment=ass).order_by('level')
+        kwargs['criteria'] = Criterion.objects.filter(assignment=ass)
+        return kwargs
+
+    def form_valid(self, form):
+        #put in scores
+        #send email to student and lecturer?
+        form.instance.student = Profile.occupation.get_students().get(profile_id=self.kwargs.get('student_id'))
+        return super(ContactView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(GradingView, self).get_context_data(**kwargs)
+        context['assignment'] = Assignment.objects.get(assignment_id=self.kwargs.get('assignment_id'))
+        context['allowed'] = (self.request.user.profile == context['assignment'].assessment.assessor)
+        if context['allowed']:
+            context['student'] = Profile.occupation.get_students().get(profile_id=self.kwargs.get('student_id'))
+            context['scorelevels'] = ScoreLevel.objects.filter(assignment=context['assignment']).order_by('level')
+            context['criterion'] = Criterion.objects.filter(assignment=context['assignment'])
+            context['edit'] = True #anpassen
         return context
 
 ###

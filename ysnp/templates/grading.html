@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}XPass - Grading{% endblock %}
+{% block content %}
+{% if allowed %}
+<h1>Grading for {{ student.user.first_name}} {{ student.user.last_name }} for assignment {{ assignment.name }}</h1>
+<p>
+    <b>Assessor:</b> {{ assignment.assessment.assessor.user.first_name }} {{ assignment.assessment.assessor.user.last_name }} <br>
+    <b>Course:</b> <a href="{% url 'course-detail' assignment.assessment.course.course_id %}">{{ assignment.assessment.course.name }}</a>
+</p>
+<form action="" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <table class="liste">
+        <tr class="liste-header">
+            <th></th>
+            {% for scorelevel in scorelevels %}
+            <th>
+                {{ scorelevel.level }}
+            </th>
+            {% endfor %}
+        </tr>
+        {% for row in form.outer_list %}
+        <tr  class="liste-body  {% cycle 'row1' 'row2' %}">
+            {% for cell in row %}
+            {% if forloop.first%}
+            <td>{{cell.label_tag}}</td>
+            {% endif %}
+            <td>
+                {{ cell.errors }}
+                {{ cell }}
+            </td>
+            {% endfor %}
+        </tr>
+        {%  endfor %}
+    </table>
+    <input type="submit" name="submit" value="Submit" class="input login">
+</form>
+
+{% else %}
+<h1>403 Permission denied</h1>
+You don't have sufficient permission. 
+{% endif %}
+{% endblock %}

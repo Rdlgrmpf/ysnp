@@ -35,3 +35,21 @@ class ScoreLevelForm(forms.ModelForm):
 	class Meta:
 		model = models.ScoreLevel
 		exclude = ('assignment',)
+
+class GradingForm(forms.Form):
+    scorelevels = None
+    criteria = None
+    outer_list = []
+
+    def __init__(self, scorelevels, criteria, *args, **kwargs):
+        super (GradingForm, self).__init__(*args, **kwargs)
+        self.outer_list = []
+        self.scorelevels = scorelevels
+        self.criteria = criteria
+        for index, item in enumerate(criteria):
+            inner_list = []
+            for index2, item2 in enumerate(scorelevels):
+                field = forms.IntegerField(label=item.name)
+                self.fields['custom_{0}_{1}'.format(index, index2)] = field
+                inner_list.append(forms.forms.BoundField(self, self.fields['custom_{0}_{1}'.format(index, index2)], 'custom_{0}_{1}'.format(index, index2)))
+            self.outer_list.append(inner_list)

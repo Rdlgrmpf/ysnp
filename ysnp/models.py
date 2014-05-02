@@ -113,7 +113,7 @@ class ScoreLevel(models.Model):
 	assignment = models.ForeignKey(Assignment)
 
 	def __unicode__(self):
-		return str(self.score_level_id) + ' ' + self.level
+		return str(self.score_level_id) + ' ' + str(self.level)
 
 	class Meta:
 		db_table = 'ScoreLevel'

@@ -86,6 +86,16 @@
 {% if perms.ysnp.add_scorelevel and is_this_lecturer %}
 <a href="{% url 'scorelevel-create' assignment.assignment_id %}" class="button">Add Score-Level</a>
 {% endif %}
+
+<h2>Assess the following students</h2>
+{% if is_this_assessor and students %}
+<ul>
+{% for student in students %}
+<li><a href="{% url 'grading' assignment.assignment_id student.profile_id %}">Assess {{student.matrikel_nr}} {{student.user.first_name}} {{student.user.last_name}}</a></li>
+{% endfor %}
+</ul> 
+{% endif %}
+
 {% else %}
 <h1>403 Permission denied</h1>
 You have insufficient permission. 
