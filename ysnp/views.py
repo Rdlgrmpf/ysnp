@@ -99,6 +99,8 @@ class AssessmentDetailView(LoginRequiredMixin, DetailView):
         context = super(AssessmentDetailView, self).get_context_data(**kwargs)
         context['allowed'] = self.test_func(self.request.user)
         if context['allowed']:
+            context['is_this_lecturer'] = (self.request.user.profile == self.object.course.lecturer)
+            context['is_this_assessor'] = (self.request.user.profile == self.object.assessor)
             context['assignments'] = Assignment.objects.filter(assessment=self.object)
 
         return context
@@ -117,7 +119,7 @@ class AssessmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
 
     def get_context_data(self, **kwargs):
         context = super(AssessmentCreateView, self).get_context_data(**kwargs)
-        context['submit_text'] = 'Create'
+        context['edit'] = False
         return context
 
 class AssessmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -134,7 +136,7 @@ class AssessmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
 
     def get_context_data(self, **kwargs):
         context = super(AssessmentUpdateView, self).get_context_data(**kwargs)
-        context['submit_text'] = 'Update'
+        context['edit'] = True
         return context
 
 ###
@@ -179,6 +181,8 @@ class AssignmentDetailView(LoginRequiredMixin, DetailView):
         if context['allowed']:
             context['criteria'] = Criterion.objects.filter(assignment=self.object)
             context['scorelevels'] = ScoreLevel.objects.filter(assignment=self.object)
+            context['is_this_lecturer'] = (self.request.user.profile == self.object.assessment.course.lecturer)
+            context['is_this_assessor'] = (self.request.user.profile == self.object.assessment.assessor)
         return context
 
 class AssignmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -195,7 +199,7 @@ class AssignmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
 
     def get_context_data(self, **kwargs):
         context = super(AssignmentCreateView, self).get_context_data(**kwargs)
-        context['submit_text'] = 'Create'
+        context['edit'] = False
         return context
 
 class AssignmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -212,7 +216,7 @@ class AssignmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
 
     def get_context_data(self, **kwargs):
         context = super(AssignmentUpdateView, self).get_context_data(**kwargs)
-        context['submit_text'] = 'Update'
+        context['edit'] = True
         return context
 
 ###
@@ -247,7 +251,7 @@ class CriterionCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 
     def get_context_data(self, **kwargs):
         context = super(CriterionCreateView, self).get_context_data(**kwargs)
-        context['submit_text'] = 'Create'
+        context['edit'] = False
         return context
 
 class CriterionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -268,7 +272,7 @@ class CriterionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
 
     def get_context_data(self, **kwargs):
         context = super(CriterionUpdateView, self).get_context_data(**kwargs)
-        context['submit_text'] = 'Update'
+        context['edit'] = True
         return context
 
 ###
@@ -294,7 +298,7 @@ class ScoreLevelCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
 
     def get_context_data(self, **kwargs):
         context = super(ScoreLevelCreateView, self).get_context_data(**kwargs)
-        context['submit_text'] = 'Create'
+        context['edit'] = False
         return context
 
 class ScoreLevelUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -315,7 +319,7 @@ class ScoreLevelUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
 
     def get_context_data(self, **kwargs):
         context = super(ScoreLevelUpdateView, self).get_context_data(**kwargs)
-        context['submit_text'] = 'Update'
+        context['edit'] = True
         return context
 
 ###

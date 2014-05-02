@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}XPass - New Criterion{% endblock %}
+{% block title %}XPass - {% if edit %} Update {% else %} Create {% endif %} Criterion{% endblock %}
 {% block content %}
-<h1>New Criterion</h1>
+<h1>{% if edit %} Update {% else %} Create {% endif %} Criterion</h1>
 <form action="" method="post" accept-charset="utf-8">
 	{% csrf_token %}
     {{ form.as_p }}
-     <input type="submit" name="submit" value="{{ submit_text }}" class="input login">
+     <input type="submit" name="submit" value="{% if edit %} Update {% else %} Create {% endif %}" class="input login">
 </form>
 {% endblock %}

@@ -3,7 +3,7 @@
 {% block content %}
 {% if allowed %}
 <h1>{{ assessment.name }}</h1>
-{% if perms.ysnp.change_assignment %}
+{% if perms.ysnp.change_assessment and is_this_lecturer %}
     <a href="{% url 'assessment-update' assessment.assessment_id %}" class="button">Edit</a><br>
 {% endif %}
 <p>
@@ -23,7 +23,7 @@
                 <th>
                     Tolerance
                 </th>
-                {% if perms.ysnp.change_assignment %}
+                {% if perms.ysnp.change_assignment and is_this_lecturer %}
                 <th>
                     Edit
                 </th>
@@ -40,7 +40,7 @@
                 <td>
                     {{ assignment.tolerance }}
                 </td>
-                {% if perms.ysnp.change_assignment %}
+                {% if perms.ysnp.change_assignment and is_this_lecturer %}
                 <td>
                     <a href="{% url 'assignment-update' assignment.assignment_id %}">edit</a>
                 </td>
@@ -51,7 +51,7 @@
     {% else %}
         No assignments.
     {% endif %}
-{% if perms.ysnp.create_assignment %}
+{% if perms.ysnp.add_assignment and is_this_lecturer %}
     <a href="{% url 'assignment-create' %}" class="button">Add assignment</a><br>
 {% endif %}
 {% else %}

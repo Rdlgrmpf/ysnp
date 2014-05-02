@@ -3,7 +3,7 @@
 {% block content %}
 {% if allowed %}
 <h1>{{ assignment.name }}</h1>
-{% if perms.ysnp.change_assignment %}
+{% if perms.ysnp.change_assignment and is_this_lecturer %}
     <a href="{% url 'assignment-update' assignment.assignment_id %}" class="button">Edit</a><br>
 {% endif %}
 <b>Name:</b> {{ assignment.name }}<br>
@@ -20,7 +20,7 @@
                 <th>
                     Name
                 </th>
-                {% if perms.ysnp.change_criterion %}
+                {% if perms.ysnp.change_criterion and is_this_lecturer %}
                 <th>
                     Edit
                 </th>
@@ -34,7 +34,7 @@
                 <td>
                     {{criterion.name}}
                 </td>
-                {% if perms.ysnp.change_criterion %}
+                {% if perms.ysnp.change_criterion and is_this_lecturer %}
                 <td>
                     <a href="{% url 'criterion-update' criterion.criterion_id %}">edit</a>
                 </td>
@@ -45,9 +45,9 @@
     {% else %}
         No criteria. <br>
     {% endif %}
-
+{% if perms.ysnp.add_criterion and is_this_lecturer %}
 <a href="{% url 'criterion-create' assignment.assignment_id %}" class="button">Add Criterion</a>
-
+{% endif %}
 <h2> Score-Levels </h2>
     {% if scorelevels %}
         <table class="liste">
@@ -58,7 +58,7 @@
                 <th>
                     Level
                 </th>
-                {% if perms.ysnp.change_criterion %}
+                {% if perms.ysnp.change_criterion and is_this_lecturer %}
                 <th>
                     Edit
                 </th>
@@ -72,7 +72,7 @@
                 <td>
                     {{scorelevel.level}}
                 </td>
-                {% if perms.ysnp.change_scorelevel %}
+                {% if perms.ysnp.change_scorelevel and is_this_lecturer %}
                 <td>
                     <a href="{% url 'scorelevel-update' scorelevel.score_level_id %}">edit</a>
                 </td>
@@ -83,9 +83,9 @@
     {% else %}
         No Score-Levels. <br>
     {% endif %}
-
+{% if perms.ysnp.add_scorelevel and is_this_lecturer %}
 <a href="{% url 'scorelevel-create' assignment.assignment_id %}" class="button">Add Score-Level</a>
-
+{% endif %}
 {% else %}
 <h1>403 Permission denied</h1>
 You have insufficient permission. 

@@ -5,6 +5,7 @@
 {% if allowed %}
 
 <h1>{{ course.name }}</h1>
+Lecturer: {{course.lecturer.user.first_name}} {{ course.lecturer.user.last_name }}
 <h2> Students </h2>  
     {% if students %}
         <table class="liste">
