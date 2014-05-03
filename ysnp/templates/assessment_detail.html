@@ -2,9 +2,11 @@
 {% block title %}XPass - {{ assessment.name }}{% endblock %}
 {% block content %}
 {% if allowed %}
-<h1>{{ assessment.name }}</h1>
+<h1 class="heading">{{ assessment.name }}</h1>
 {% if perms.ysnp.change_assessment and is_this_lecturer %}
-    <a href="{% url 'assessment-update' assessment.assessment_id %}" class="button">Edit</a><br>
+    	<a href="{% url 'assessment-update' assessment.assessment_id %}">
+		<img class="heading_icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/settings2.png">
+	</a><br>
 {% endif %}
 <p>
     <b>Assessor:</b> {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }} <br>
@@ -15,7 +17,7 @@
         <table class="liste">
             <tr class="liste-header">
                 <th>
-                    AssignmentID
+                    ID
                 </th>
                 <th>
                     Name
@@ -25,7 +27,7 @@
                 </th>
                 {% if perms.ysnp.change_assignment and is_this_lecturer %}
                 <th>
-                    Edit
+                    
                 </th>
                 {% endif %}
             </tr>
@@ -42,7 +44,9 @@
                 </td>
                 {% if perms.ysnp.change_assignment and is_this_lecturer %}
                 <td>
-                    <a href="{% url 'assignment-update' assignment.assignment_id %}">edit</a>
+                    	<a href="{% url 'assignment-update' assignment.assignment_id %}">
+				<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/settings.png">
+			</a>
                 </td>
                 {% endif %}
             </tr>
@@ -52,7 +56,11 @@
         No assignments.
     {% endif %}
 {% if perms.ysnp.add_assignment and is_this_lecturer %}
-    <a href="{% url 'assignment-create' assessment.assessment_id %}" class="button">Add assignment</a><br>
+    	<a href="{% url 'assignment-create' assessment.assessment_id %}">
+		<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/plus.png">
+		Assignment
+	</a>
+	<br>
 {% endif %}
 {% else %}
 <h1>403 Permission denied</h1>

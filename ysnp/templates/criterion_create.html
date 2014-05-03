@@ -5,6 +5,6 @@
 <form action="" method="post" accept-charset="utf-8">
 	{% csrf_token %}
     {{ form.as_p }}
-     <input type="submit" name="submit" value="{% if edit %} Update {% else %} Create {% endif %}" class="input login">
+     <input type="submit" name="submit" value="{% if edit %} Update {% else %} Create {% endif %}" class="button">
 </form>
 {% endblock %}
