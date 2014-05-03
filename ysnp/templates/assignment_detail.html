@@ -104,7 +104,6 @@
 <br>
 <h2>Grade student</h2>
 {% if is_this_assessor and students %}
-{% for student in students %}
 <table class="liste">
 	<tr class="liste-header">
 		<th>
@@ -117,6 +116,7 @@
 	
 		</th>
 	</tr>
+{% for student in students %}
 	<tr  class="liste-body  {% cycle 'row1' 'row2' %}">
 		<td>
 			{{student.matrikel_nr}}
@@ -130,8 +130,8 @@
 			</a>
 		</td>
 	</tr>
-</table>
 {% endfor %}
+</table>
 {% endif %}
 
 {% else %}
