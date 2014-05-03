@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}XPass - Results{% endblock %}
+{% block content %}
+<h1>Results for {{ user.first_name}} {{ user.last_name }} </h1>
+
+{% if assignments %}
+<ul>
+{% for assignment in assignments %}
+    <li><a href="{% url 'result-detail' assignment.assignment_id %}">{{ assignment.name }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

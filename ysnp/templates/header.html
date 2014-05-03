@@ -30,6 +30,16 @@
 				{% endif %}
 			</ul>
 		</li>
+		{% if user.profile.is_student %}
+		<li class="main">
+			<a href="{% url 'result-list' %}">Results</a>
+			<ul>
+				<li class="unterpunkt">
+					<a href="{% url 'result-list' %}">List</a>
+				</li>
+			</ul>
+		</li>
+		{% endif %}
         <li class="main">
 			<a href="{% url 'user-profile' %}">Account</a>
 			<ul>

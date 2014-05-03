@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, Template
 from django.views.generic import DetailView, ListView, TemplateView, CreateView, UpdateView, FormView
-from braces.views import LoginRequiredMixin, PermissionRequiredMixin
+from braces.views import LoginRequiredMixin, PermissionRequiredMixin, GroupRequiredMixin
 from itertools import chain
 from ysnp.models import Assessment, Assignment, Course, Profile, Student_Course, Criterion, ScoreLevel, Criterion_Score
 from ysnp import forms
@@ -372,6 +372,39 @@ class GradingView(LoginRequiredMixin, FormView):
             context['scorelevels'] = ScoreLevel.objects.filter(assignment=context['assignment']).order_by('level')
             context['criterion'] = Criterion.objects.filter(assignment=context['assignment'])
             context['edit'] = True #anpassen
+        return context
+
+class ResultListView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    template_name = 'result_list.html'
+    group_required = u'Student'
+
+    def get_context_data(self, **kwargs):
+        context = super(ResultListView, self).get_context_data(**kwargs)
+        context['assignments'] = Assignment.objects.filter(assessment__course__student_course__student=self.request.user.profile)
+        return context
+
+class ResultDetailView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    template_name = 'result_detail.html'
+    group_required = u'Student'
+
+    def get_context_data(self, **kwargs):
+        context = super(ResultDetailView, self).get_context_data(**kwargs)
+        #get the student from logindata
+        student = self.request.user.profile
+        #get the assignment he/she wants details for
+        assignment = Assignment.objects.filter(assessment__course__student_course__student=student).get(assignment_id=self.kwargs.get('assignment_id'))
+        #get all criteria associated with this assignment
+        criteria = Criterion.objects.filter(assignment=assignment)
+        #get all scorelevels associated with this assignment
+        scorelevels = ScoreLevel.objects.filter(assignment=assignment)
+        #get the matching grades, for attributes see models/Criterion_Score
+        grades = Criterion_Score.objects.filter(criterion=criteria, score_level=scorelevels, student=student)
+        
+        #make everything from above available in the template
+        context['assignment'] = assignment
+        context['grades'] = grades
+        context['criteria'] = criteria
+        context['scorelevels'] = scorelevels
         return context
 
 ###
