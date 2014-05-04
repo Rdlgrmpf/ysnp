@@ -25,6 +25,9 @@
                 <th>
                     Tolerance
                 </th>
+                <th>
+                    Score
+                </th>
                 {% if perms.ysnp.change_assignment and is_this_lecturer %}
                 <th>
                     
@@ -41,6 +44,9 @@
                 </td>
                 <td>
                     {{ assignment.tolerance }}
+                </td>
+                <td>
+                    <a href="{% url 'result-detail' assignment.assignment_id %}">Score</a>
                 </td>
                 {% if perms.ysnp.change_assignment and is_this_lecturer %}
                 <td>

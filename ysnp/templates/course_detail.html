@@ -51,6 +51,9 @@ Lecturer: {{course.lecturer.user.first_name}} {{ course.lecturer.user.last_name 
             <th>
                 Assessor
             </th>
+             <th>
+                Score
+            </th>
         </tr>
             {% for assessment in assessments %}
             <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
@@ -62,6 +65,9 @@ Lecturer: {{course.lecturer.user.first_name}} {{ course.lecturer.user.last_name 
                 </td>
                 <td>
                     {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }}
+                </td>
+                <td>
+                	Score
                 </td>
             </tr>
             {%  endfor %}

@@ -19,7 +19,7 @@ class Utils(object):
         Constructor
         '''
 
-        
+    @staticmethod    
     def scoreToScore(self, scores, weights, lenience):
         sMin = 1
         sMax = 1
@@ -31,7 +31,7 @@ class Utils(object):
         sMax = 1 - sMax
         return (1 - lenience) * sMin + lenience * sMax
         
-        
+    @staticmethod    
     def refining(self, impact, performance, score):
         if performance == "inf":
             score = score / (1 - impact * (1 - score))
@@ -39,7 +39,7 @@ class Utils(object):
             score = score * (1 - math.pow(impact * (1 - score), performance)) / (1 - impact * (1 - score))
         return score
     
-    
+    @staticmethod
     def rateToScore(self, rates, impacts, score, i):
         ''' Call with len(rates)-1 as i when calling first time '''
         if(i != 0):
@@ -74,13 +74,13 @@ class Utils(object):
         
         return (1 - tolerance) * min(rUpper, rLower) + tolerance * max(rUpper, rLower)
 
-
-    def scoreToGrade(self, score, curvature, polarity, gMin, gMax):
+    @staticmethod
+    def scoreToGrade(self, score, curvature=1.678, polarity=1, gMin=1, gMax=5):
         curvature= pow((1-pow(score, curvature)), (1/curvature));
         g = polarity*curvature+(1-polarity)*(1-curvature);
         return g * gMin + (1-g)*gMax; 
     
-    
+    @staticmethod
     def scoreToRate(self, score, standart, impact):
         if(standart==0 or standart==1 or impact==0 ):
             return 1;
