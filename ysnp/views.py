@@ -12,6 +12,7 @@ from ysnp import forms
 from django.core.urlresolvers import reverse
 from utils import Utils
 import math
+from collections import defaultdict
 
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'base.html'
@@ -396,32 +397,36 @@ class ResultDetailView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         #get the assignment he/she wants details for
         assignment = Assignment.objects.filter(assessment__course__student_course__student=student).get(assignment_id=self.kwargs.get('assignment_id'))
         #get all criteria associated with this assignment
-        criteria = Criterion.objects.filter(assignment=assignment)
+        criteria = Criterion.objects.filter(assignment=assignment).order_by('criterion_id')
         #get all scorelevels associated with this assignment
-        scoreLevels = ScoreLevel.objects.filter(assignment=assignment)
+        scoreLevels = ScoreLevel.objects.filter(assignment=assignment).order_by('score_level_id')
         #get the matching grades, for attributes see models/Criterion_Score
-        scoreToCriterion = Criterion_Score.objects.filter(criterion=criteria, score_level=scoreLevels, student=student)
-       
+        scoreToCriterion = Criterion_Score.objects.filter(criterion=criteria, score_level=scoreLevels, student=student)  
 
         totalSum = 0.0
-        
+        crits = defaultdict(list)
         for level in scoreLevels:
-            level.criterionScore = Criterion_Score.objects.filter(score_level=level.score_level_id, student=student)
-            
+            criterionScore = Criterion_Score.objects.filter(score_level=level.score_level_id, student=student).order_by('score_level')
             level.sum = 0.0
-            for score in level.criterionScore:
+            for score in criterionScore:
+                crits[score.criterion_id].append(score.number)
                 level.sum += score.number
             totalSum += level.sum
+
             
         levelPercentages = []
         for level in scoreLevels:
             levelPercentages.append(level.sum /totalSum)
             level.percentage = round(level.sum /totalSum, 2) * 100
+            
+        for criterion in criteria:
+            criterion.res = crits[criterion.criterion_id]
+
         
         #make everything from above available in the template
         context['assignment'] = assignment
-        #context['profiles'] = profiles
         context['criteria'] = criteria
+        context['crits'] = crits
         context['scoreLevels'] = scoreLevels
         context['result'] = round(Utils.profileToScore(self, levelPercentages, assignment.tolerance), 2)
         return context

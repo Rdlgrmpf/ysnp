@@ -7,6 +7,7 @@
 
 <table>
 <tr>
+<td>Percentage</td>
 {% for level in scoreLevels %}
 
 	<td>{{ level.percentage }}</td>
@@ -14,6 +15,7 @@
 {%  endfor %}
 </tr>
 <tr>
+<td>Sum</td>
 {% for level in scoreLevels %}
 
 	<td>{{ level.sum }}</td>
@@ -21,6 +23,16 @@
 {%  endfor %}
 </tr>
 
+
+{% for criterion in criteria %}
+<tr>
+	<td> {{ criterion.name}} </td>
+	{% for number in criterion.res %}
+		<td> {{ number }} </td>
+	{%  endfor %}
+	
+</tr>
+{%  endfor %}
 </table>
 
 {% endblock %}
