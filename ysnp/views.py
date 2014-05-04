@@ -406,14 +406,16 @@ class ResultDetailView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         totalSum = 0.0
         
         for level in scoreLevels:
-            level.sum = 0
+            level.criterionScore = Criterion_Score.objects.filter(score_level=level.score_level_id, student=student)
+            
+            level.sum = 0.0
             for score in level.criterionScore:
                 level.sum += score.number
             totalSum += level.sum
             
         levelPercentages = []
         for level in scoreLevels:
-            levelPercentages.append(level.sum / totalSum)
+            levelPercentages.append(level.sum /totalSum)
             level.percentage = round(level.sum /totalSum, 2) * 100
         
         #make everything from above available in the template
