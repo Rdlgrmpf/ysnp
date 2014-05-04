@@ -3,6 +3,24 @@
 {% block content %}
 <h1>Results for {{ user.first_name}} {{ user.last_name }} for assignment {{ assignment.name }}</h1>
 
+ <b>Result: {{result}}</b>
 
+<table>
+<tr>
+{% for level in scoreLevels %}
+
+	<td>{{ level.percentage }}</td>
+
+{%  endfor %}
+</tr>
+<tr>
+{% for level in scoreLevels %}
+
+	<td>{{ level.sum }}</td>
+
+{%  endfor %}
+</tr>
+
+</table>
 
 {% endblock %}

@@ -47,7 +47,7 @@ class Utils(object):
         else:
             return self.refining(impacts[i], rates[i], score)
     
-    
+    @staticmethod
     def profileToScore(self, profile, tolerance):
         #Number of quality categories
         num = len(profile)
