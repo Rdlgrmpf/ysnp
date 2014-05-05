@@ -187,6 +187,7 @@ class AssignmentDetailView(LoginRequiredMixin, DetailView):
             context['students'] = Profile.occupation.get_students().filter(student_course__course=self.object.assessment.course)
             context['is_this_lecturer'] = (self.request.user.profile == self.object.assessment.course.lecturer)
             context['is_this_assessor'] = (self.request.user.profile == self.object.assessment.assessor)
+            context['is_assessed'] = self.object.is_assessed_for_student(self.request.user.profile)
         return context
 
 class AssignmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -348,20 +349,35 @@ class GradingView(LoginRequiredMixin, FormView):
     def get_form_kwargs(self):
         kwargs = super(GradingView, self).get_form_kwargs()
         ass = Assignment.objects.get(assignment_id=self.kwargs.get('assignment_id'))
+        student = Profile.occupation.get_students().get(profile_id=self.kwargs.get('student_id'))
         kwargs['scorelevels'] = ScoreLevel.objects.filter(assignment=ass).order_by('level')
         kwargs['criteria'] = Criterion.objects.filter(assignment=ass)
+        kwargs['has_old_values'] = ass.is_assessed_for_student(student)
+        if kwargs['has_old_values']:
+            kwargs['old_values'] = []
+            for index, item in enumerate(kwargs['criteria']):
+                for index2, item2 in enumerate(kwargs['scorelevels']):
+                    kwargs['old_values'].append(Criterion_Score.objects.get(criterion=item, score_level=item2, student=student).number)
+
         return kwargs
 
     def form_valid(self, form):
         #get student
         student = Profile.occupation.get_students().get(profile_id=self.kwargs.get('student_id'))
-        #put in scores
-        #same loops as when generated
-        for index, item in enumerate(form.criteria):
-            for index2, item2 in enumerate(form.scorelevels):
-                value = form.cleaned_data['custom_{0}_{1}'.format(index, index2)]
-                s = Criterion_Score(criterion=item, score_level=item2, student=student, number=value)
-                s.save()
+        #if already assessed, update
+        if Assignment.objects.get(assignment_id=self.kwargs.get('assignment_id')).is_assessed_for_student(student):
+            for index, item in enumerate(form.criteria):
+                for index2, item2 in enumerate(form.scorelevels):
+                    value = form.cleaned_data['custom_{0}_{1}'.format(index, index2)]
+                    cs = Criterion_Score.objects.get(criterion=item, score_level=item2, student=student)
+                    cs.number = value
+                    cs.save()
+        else:
+            for index, item in enumerate(form.criteria):
+                for index2, item2 in enumerate(form.scorelevels):
+                    value = form.cleaned_data['custom_{0}_{1}'.format(index, index2)]
+                    s = Criterion_Score(criterion=item, score_level=item2, student=student, number=value)
+                    s.save()
         #send email to student and lecturer?
         self.success_url = reverse('assignment-detail', kwargs={'pk': self.kwargs.get('assignment_id')})
         return super(GradingView, self).form_valid(form)
@@ -397,11 +413,11 @@ class ResultDetailView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         #get the assignment he/she wants details for
         assignment = Assignment.objects.filter(assessment__course__student_course__student=student).get(assignment_id=self.kwargs.get('assignment_id'))
         #get all criteria associated with this assignment
-        criteria = Criterion.objects.filter(assignment=assignment).order_by('criterion_id')
+        criteria = Criterion.objects.filter(assignment=assignment)
         #get all scorelevels associated with this assignment
-        scoreLevels = ScoreLevel.objects.filter(assignment=assignment).order_by('score_level_id')
+        scoreLevels = ScoreLevel.objects.filter(assignment=assignment).order_by('level')
         #get the matching grades, for attributes see models/Criterion_Score
-        scoreToCriterion = Criterion_Score.objects.filter(criterion=criteria, score_level=scoreLevels, student=student)  
+        scoreToCriterion = Criterion_Score.objects.filter(criterion=criteria, score_level=scoreLevels, student=student)
 
         totalSum = 0.0
         crits = defaultdict(list)

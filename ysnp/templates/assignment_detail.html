@@ -13,7 +13,11 @@
 	<b>Name:</b> {{ assignment.name }}<br>
 	<b>Tolerance:</b> {{ assignment.tolerance }}<br>
 	<b>Assessment:</b> <a href="{% url 'assessment-detail' assignment.assessment.assessment_id %}">{{assignment.assessment.name}}</a><br>
+    {% if user.profile.is_student and is_assessed %}
 	<b>Result: </b> <a href="{% url 'result-detail' assignment.assignment_id %}">Score</a>
+    {% elif user.profile.is_student %}
+    <b>Result: </b> Not yet assessed
+    {% endif %}
 	<br>
 </p>
 
