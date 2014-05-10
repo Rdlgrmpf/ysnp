@@ -71,6 +71,7 @@ class Assignment(models.Model):
     assignment_id = models.AutoField(primary_key = True)
     name = models.TextField()
     tolerance = models.FloatField()
+    weight = models.FloatField()
     assessment = models.ForeignKey(Assessment)
 
     def __unicode__(self):
