@@ -353,8 +353,8 @@ class GradingView(LoginRequiredMixin, FormView):
         kwargs['scorelevels'] = ScoreLevel.objects.filter(assignment=ass).order_by('level')
         kwargs['criteria'] = Criterion.objects.filter(assignment=ass)
         kwargs['has_old_values'] = ass.is_assessed_for_student(student)
+        kwargs['old_values'] = []
         if kwargs['has_old_values']:
-            kwargs['old_values'] = []
             for index, item in enumerate(kwargs['criteria']):
                 for index2, item2 in enumerate(kwargs['scorelevels']):
                     kwargs['old_values'].append(Criterion_Score.objects.get(criterion=item, score_level=item2, student=student).number)
@@ -399,7 +399,11 @@ class ResultListView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ResultListView, self).get_context_data(**kwargs)
-        context['assignments'] = Assignment.objects.filter(assessment__course__student_course__student=self.request.user.profile)
+        result = []
+        for assignment in Assignment.objects.filter(assessment__course__student_course__student=self.request.user.profile):
+            if assignment.is_assessed_for_student(self.request.user.profile):
+                result.append(assignment)
+        context['assignments']  = result
         return context
 
 class ResultDetailView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
