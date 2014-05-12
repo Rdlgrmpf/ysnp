@@ -104,8 +104,58 @@ class AssessmentDetailView(LoginRequiredMixin, DetailView):
         if context['allowed']:
             context['is_this_lecturer'] = (self.request.user.profile == self.object.course.lecturer)
             context['is_this_assessor'] = (self.request.user.profile == self.object.assessor)
-            context['assignments'] = Assignment.objects.filter(assessment=self.object)
+            
+            assignments = Assignment.objects.filter(assessment=self.object)
 
+            result = []
+            weight = []
+
+            if self.request.user.profile.is_student():
+                for assignment in assignments:
+                    if assignment.is_assessed_for_student(self.request.user.profile):
+                                                 
+                        #get all criteria associated with this assignment
+                        criteria = Criterion.objects.filter(assignment=assignment)
+                        #get all scorelevels associated with this assignment
+                        scoreLevels = ScoreLevel.objects.filter(assignment=assignment).order_by('level')
+                        #get the matching grades, for attributes see models/Criterion_Score
+                        scoreToCriterion = Criterion_Score.objects.filter(criterion=criteria, score_level=scoreLevels, student=self.request.user.profile)
+
+        
+                        totalSum = 0.0
+                        crits = defaultdict(list)
+                        for level in scoreLevels:
+                            criterionScore = Criterion_Score.objects.filter(score_level=level.score_level_id, student=self.request.user.profile).order_by('score_level')
+                            level.sum = 0.0
+                            for score in criterionScore:
+                                crits[score.criterion_id].append(score.number)
+                                level.sum += score.number
+                            totalSum += level.sum
+    
+                
+                        levelPercentages = []
+                        for level in scoreLevels:
+                            levelPercentages.append(level.sum /totalSum)
+                            level.percentage = round(level.sum /totalSum, 2) * 100
+                            
+                        for criterion in criteria:
+                            criterion.res = crits[criterion.criterion_id]
+                            
+                        assignment.result = round(Utils.profileToScore(self, levelPercentages, assignment.tolerance), 2)
+                        result.append(round(Utils.profileToScore(self, levelPercentages, assignment.tolerance), 2))
+                        weight.append(assignment.weight)
+                        
+                        if result.count('-') == 0:
+                            context['grade'] = round(Utils.scoreToGrade(self, Utils.scoreToScore(self, result, weight, self.object.lenience)),2)
+                        else:
+                            context['grade'] = '-'
+                        
+                    else:
+                        assignment.result = '-'
+                        result.append('-') 
+                        
+        
+        context['assignments'] = assignments           
         return context
 
 class AssessmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

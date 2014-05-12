@@ -57,6 +57,7 @@ class Assessment(models.Model):
     name = models.TextField()
     course = models.ForeignKey(Course)
     assessor = models.ForeignKey(Profile)
+    lenience = models.FloatField()
 
     def __unicode__(self):
         return str(self.assessment_id) + ' ' + self.name + ' in ' + str(self.course.name) +  ' graded by ' + self.assessor.user.first_name + ' ' + self.assessor.user.last_name
