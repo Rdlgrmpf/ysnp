@@ -3,6 +3,7 @@
 {% block content %}
 <h1>Results for {{ user.first_name}} {{ user.last_name }} for assignment {{ assignment.name }}</h1>
 
+{% if is_assessed %}
  <b>Result: {{result}}</b>
 
 <table>
@@ -34,5 +35,8 @@
 </tr>
 {%  endfor %}
 </table>
+{% else %}
+Assignment has not been assessed yet.
+{% endif %}
 
 {% endblock %}

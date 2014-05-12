@@ -423,32 +423,36 @@ class ResultDetailView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         #get the matching grades, for attributes see models/Criterion_Score
         scoreToCriterion = Criterion_Score.objects.filter(criterion=criteria, score_level=scoreLevels, student=student)
 
-        totalSum = 0.0
-        crits = defaultdict(list)
-        for level in scoreLevels:
-            criterionScore = Criterion_Score.objects.filter(score_level=level.score_level_id, student=student).order_by('score_level')
-            level.sum = 0.0
-            for score in criterionScore:
-                crits[score.criterion_id].append(score.number)
-                level.sum += score.number
-            totalSum += level.sum
-
-            
-        levelPercentages = []
-        for level in scoreLevels:
-            levelPercentages.append(level.sum /totalSum)
-            level.percentage = round(level.sum /totalSum, 2) * 100
-            
-        for criterion in criteria:
-            criterion.res = crits[criterion.criterion_id]
+        if assignment.is_assessed_for_student(self.request.user.profile):
+            totalSum = 0.0
+            crits = defaultdict(list)
+            for level in scoreLevels:
+                criterionScore = Criterion_Score.objects.filter(score_level=level.score_level_id, student=student).order_by('score_level')
+                level.sum = 0.0
+                for score in criterionScore:
+                    crits[score.criterion_id].append(score.number)
+                    level.sum += score.number
+                totalSum += level.sum
+    
+                
+            levelPercentages = []
+            for level in scoreLevels:
+                levelPercentages.append(level.sum /totalSum)
+                level.percentage = round(level.sum /totalSum, 2) * 100
+                
+            for criterion in criteria:
+                criterion.res = crits[criterion.criterion_id]
 
         
-        #make everything from above available in the template
-        context['assignment'] = assignment
-        context['criteria'] = criteria
-        context['crits'] = crits
-        context['scoreLevels'] = scoreLevels
-        context['result'] = round(Utils.profileToScore(self, levelPercentages, assignment.tolerance), 2)
+            #make everything from above available in the template
+            context['is_assessed'] = True
+            context['assignment'] = assignment
+            context['criteria'] = criteria
+            context['crits'] = crits
+            context['scoreLevels'] = scoreLevels
+            context['result'] = round(Utils.profileToScore(self, levelPercentages, assignment.tolerance), 2)
+        else:
+            context['is_assessed'] = False
         return context
 
 ###
