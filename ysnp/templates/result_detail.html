@@ -4,36 +4,57 @@
 <h1>Results for {{ user.first_name}} {{ user.last_name }} for assignment {{ assignment.name }}</h1>
 
 {% if is_assessed %}
- <b>Result: {{result}}</b>
-
-<table>
-<tr>
-<td>Percentage</td>
-{% for level in scoreLevels %}
-
-	<td>{{ level.percentage }}</td>
-
-{%  endfor %}
-</tr>
-<tr>
-<td>Sum</td>
-{% for level in scoreLevels %}
-
-	<td>{{ level.sum }}</td>
-
-{%  endfor %}
-</tr>
-
-
-{% for criterion in criteria %}
-<tr>
-	<td> {{ criterion.name}} </td>
-	{% for number in criterion.res %}
-		<td> {{ number }} </td>
-	{%  endfor %}
+<p>
+	<b>
+		Result: 
+	</b>
+	{{result}}
+</p>
+<table class="liste">
+	<tr class="liste-header">
+		<th>
+			<!--Intentionally left blank-->
+		</th>
+		{% for level in scoreLevels %}
+		<th>
+			Level {{ level.level }}
+		</th>
+		{%  endfor %}
+	</tr>
+	<tr class="liste-body row1">
+		<td>
+			Percentage
+		</td>
+		{% for level in scoreLevels %}
+		<td>
+			{{ level.percentage }}
+		</td>
+		{%  endfor %}
+	</tr>
+	<tr class="liste-body row2">
+		<td>
+			Sum
+		</td>
+		{% for level in scoreLevels %}
+		<td>
+			{{ level.sum }}
+		</td>
+		{%  endfor %}
+	</tr>
 	
-</tr>
-{%  endfor %}
+	{% for criterion in criteria %}
+	<tr class="liste-body {% cycle 'row1' 'row2' %}">
+		<td> 
+			{{ criterion.name}} 
+		</td>
+		{% for number in criterion.res %}
+		<td> 
+			{{ number }} 
+		</td>
+		{%  endfor %}
+	</tr>
+	{%  endfor %}
+
 </table>
 {% else %}
 Assignment has not been assessed yet.

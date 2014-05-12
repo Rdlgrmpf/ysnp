@@ -26,7 +26,9 @@
                     Tolerance
                 </th>
                 <th>
+                	{% if is_student %}
                     Score
+                	{% endif %}
                 </th>
                 {% if perms.ysnp.change_assignment and is_this_lecturer %}
                 <th>
@@ -57,10 +59,12 @@
                 {% endif %}
             </tr>
             {%  endfor %}
-            <tr>
-            	<td>Result: {{grade}}</td>
-            </tr>
         </table>
+    {% if grade %}
+    <p>
+    	<b>Result: </b>{{grade}}
+    </p>
+    {% endif %}
     {% else %}
         No assignments.
     {% endif %}

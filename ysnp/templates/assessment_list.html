@@ -23,7 +23,7 @@
 		{% endif %}
 	</tr>
 	{% for assessment in assessments %}
-	<tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+	<tr class="liste-body {% cycle 'row1' 'row2' %}">
 		<td>
 			{{assessment.assessment_id}}
 		</td>
@@ -38,7 +38,7 @@
 		</td>
 		{% if perms.ysnp.change_assessment %}
 		<td>
-            		<a href="{% url 'assessment-update' assessment.assessment_id %}">
+            <a href="{% url 'assessment-update' assessment.assessment_id %}">
 				<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/settings.png">
 			</a>
 		</td>
