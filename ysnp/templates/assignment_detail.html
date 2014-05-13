@@ -21,123 +21,129 @@
 	<br>
 </p>
 
-<h2> Criteria </h2>
-    {% if criteria %}
-        <table class="liste">
-            <tr class="liste-header">
-                <th>
-                    ID
-                </th>
-                <th>
-                    Name
-                </th>
-                {% if perms.ysnp.change_criterion and is_this_lecturer %}
-                <th>
-                   
-                </th>
-                {% endif %}
-            </tr>
-            {% for criterion in criteria %}
-            <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
-                <td>
-                    {{ criterion.criterion_id }}
-                </td>
-                <td>
-                    {{criterion.name}}
-                </td>
-                {% if perms.ysnp.change_criterion and is_this_lecturer %}
-                <td>
-                    	<a href="{% url 'criterion-update' criterion.criterion_id %}">
-				<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/settings.png">
-			</a>
-                </td>
-                {% endif %}
-            </tr>
-            {%  endfor %}
-        </table>
-    {% else %}
-        No criteria. <br>
+<div class="inline">
+    <h2> Criteria </h2>
+        {% if criteria %}
+            <table class="liste">
+                <tr class="liste-header">
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    {% if perms.ysnp.change_criterion and is_this_lecturer %}
+                    <th>
+                       
+                    </th>
+                    {% endif %}
+                </tr>
+                {% for criterion in criteria %}
+                <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+                    <td>
+                        {{ criterion.criterion_id }}
+                    </td>
+                    <td>
+                        {{criterion.name}}
+                    </td>
+                    {% if perms.ysnp.change_criterion and is_this_lecturer %}
+                    <td>
+                        	<a href="{% url 'criterion-update' criterion.criterion_id %}">
+    				<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/settings.png">
+    			</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {%  endfor %}
+            </table>
+        {% else %}
+            No criteria. <br>
+        {% endif %}
+    {% if perms.ysnp.add_criterion and is_this_lecturer %}
+    <a href="{% url 'criterion-create' assignment.assignment_id %}">
+    	<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/plus.png"> Criterion
+    </a>
     {% endif %}
-{% if perms.ysnp.add_criterion and is_this_lecturer %}
-<a href="{% url 'criterion-create' assignment.assignment_id %}">
-	<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/plus.png"> Criterion
-</a>
-{% endif %}
-<h2> Score-Levels </h2>
-    {% if scorelevels %}
-        <table class="liste">
-            <tr class="liste-header">
-                <th>
-                    ID
-                </th>
-                <th>
-                    Level
-                </th>
-                {% if perms.ysnp.change_criterion and is_this_lecturer %}
-                <th>
-                
-				</th>
-                {% endif %}
-            </tr>
-            {% for scorelevel in scorelevels %}
-            <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
-                <td>
-                    {{ scorelevel.score_level_id }}
-                </td>
-                <td>
-                    {{scorelevel.level}}
-                </td>
-                {% if perms.ysnp.change_scorelevel and is_this_lecturer %}
-                <td>
-                    	<a href="{% url 'scorelevel-update' scorelevel.score_level_id %}">
-				<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/settings.png">
-			</a>
-                </td>
-                {% endif %}
-            </tr>
-            {%  endfor %}
-        </table>
-    {% else %}
-        No Score-Levels. <br>
+</div>
+<div class="inline">
+    <h2> Score-Levels </h2>
+        {% if scorelevels %}
+            <table class="liste">
+                <tr class="liste-header">
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Level
+                    </th>
+                    {% if perms.ysnp.change_criterion and is_this_lecturer %}
+                    <th>
+                    
+    				</th>
+                    {% endif %}
+                </tr>
+                {% for scorelevel in scorelevels %}
+                <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
+                    <td>
+                        {{ scorelevel.score_level_id }}
+                    </td>
+                    <td>
+                        {{scorelevel.level}}
+                    </td>
+                    {% if perms.ysnp.change_scorelevel and is_this_lecturer %}
+                    <td>
+                        	<a href="{% url 'scorelevel-update' scorelevel.score_level_id %}">
+    				<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/settings.png">
+    			</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {%  endfor %}
+            </table>
+        {% else %}
+            No Score-Levels. <br>
+        {% endif %}
+    {% if perms.ysnp.add_scorelevel and is_this_lecturer %}
+    <a href="{% url 'scorelevel-create' assignment.assignment_id %}">
+    	<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/plus.png"> Score-Level
+    </a>
     {% endif %}
-{% if perms.ysnp.add_scorelevel and is_this_lecturer %}
-<a href="{% url 'scorelevel-create' assignment.assignment_id %}">
-	<img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/plus.png"> Score-Level
-</a>
-{% endif %}
+</div>
 
-{% if is_this_assessor and students %}
-<br>
-<h2>Grade student</h2>
-<table class="liste">
-	<tr class="liste-header">
-		<th>
-			Student ID
-		</th>
-		<th>
-			Name
-		</th>
-		<th>
-	
-		</th>
-	</tr>
-{% for student in students %}
-	<tr  class="liste-body  {% cycle 'row1' 'row2' %}">
-		<td>
-			{{student.matrikel_nr}}
-		</td>
-		<td>
-			{{student.user.first_name}} {{student.user.last_name}}
-		</td>
-		<td>
-			<a href="{% url 'grading' assignment.assignment_id student.profile_id %}">
-				 <img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/assess.png">
-			</a>
-		</td>
-	</tr>
-{% endfor %}
-</table>
-{% endif %}
+<div class="clearboth">
+    {% if is_this_assessor and students %}
+    <br>
+    <h2>Grade student</h2>
+    <table class="liste">
+    	<tr class="liste-header">
+    		<th>
+    			Student ID
+    		</th>
+    		<th>
+    			Name
+    		</th>
+    		<th>
+    	
+    		</th>
+    	</tr>
+    {% for student in students %}
+    	<tr  class="liste-body  {% cycle 'row1' 'row2' %}">
+    		<td>
+    			{{student.matrikel_nr}}
+    		</td>
+    		<td>
+    			{{student.user.first_name}} {{student.user.last_name}}
+    		</td>
+    		<td>
+    			<a href="{% url 'grading' assignment.assignment_id student.profile_id %}">
+    				 <img class="icon" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/icons/assess.png">
+    			</a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+</div>
 
 {% else %}
 <h1>403 Permission denied</h1>

@@ -1,13 +1,18 @@
-{% extends "password_reset/base.html" %}
+{% extends "./logged_out_base.html" %}
 {% load i18n %}
 {% load url from future %}
 
-{% block title %}{% trans "Password recovery" %}{% endblock %}
+{% block title %}
+	{% trans "Password recovery" %}
+{% endblock %}
 
 {% block content %}
+<div class="centered logindiv">
+	<img id="login_logo" src="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/images/xpass_logo_gross.png">
 	<form method="post" action="{{ url }}">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<p><input type="submit" value="{% trans "Recover my password" %}"></p>
+		<p><input class="input login" type="submit" value="{% trans "Recover my password" %}"></p>
 	</form>
+</div>
 {% endblock %}

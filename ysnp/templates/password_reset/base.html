@@ -5,11 +5,15 @@
 		</title>
 		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/main.css">
 		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/footer.css">
+		<link rel="stylesheet" type="text/css" href="http://wwwlehre.dhbw-stuttgart.de/~it12157/static/css/login.css">
 	</head>
 	<body>
 		{% include 'header.html' %}
 		{% block content %}
-        <h1>Welcome {{ user.first_name }} {{ user.last_name }}</h1><br>
+        <h1>
+        	Welcome {{ user.first_name }} {{ user.last_name }}
+        </h1>
+        <br>
         {% endblock %}
         <div id="footerdiv">
             <div>
