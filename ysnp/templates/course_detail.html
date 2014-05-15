@@ -51,9 +51,11 @@
             <th>
                 Assessor
             </th>
+            {% if user.profile.is_student %}
              <th>
                 Score
             </th>
+            {% endif %}
         </tr>
             {% for assessment in assessments %}
             <tr  class="liste-body 	{% cycle 'row1' 'row2' %}">
@@ -66,9 +68,11 @@
                 <td>
                     {{ assessment.assessor.user.first_name }} {{ assessment.assessor.user.last_name }}
                 </td>
+                {% if user.profile.is_student %}
                 <td>
                 	{{ assessment.grade }}
                 </td>
+                {% endif %}
             </tr>
             {%  endfor %}
         </table>
